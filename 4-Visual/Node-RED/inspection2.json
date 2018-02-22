@@ -1,0 +1,507 @@
+[
+    {
+        "id": "1bcb3fd6.4a5be",
+        "type": "ui_gauge",
+        "z": "ee77d0e0.fdf44",
+        "name": "",
+        "group": "7685885.f33b078",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "",
+        "label": "percent",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 856,
+        "y": 694.333330154419,
+        "wires": []
+    },
+    {
+        "id": "89bb0a4c.ad2408",
+        "type": "ui_button",
+        "z": "ee77d0e0.fdf44",
+        "name": "Bad Crack",
+        "group": "7bebca6.44fbd34",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Single Crack",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "1",
+        "payloadType": "str",
+        "topic": "",
+        "x": 156,
+        "y": 114.33333015441895,
+        "wires": [
+            [
+                "1bf7c236.f45b7e"
+            ]
+        ]
+    },
+    {
+        "id": "157edb5e.7bf675",
+        "type": "function",
+        "z": "ee77d0e0.fdf44",
+        "name": "VR Inputs",
+        "func": "global.set(\"imgData\",msg.payload); \nglobal.set(\"fileName\",msg.filename);\nmsg.headers = { \"Content - Type \":\"image / jpeg \"};\nmsg.params = {classifier_ids:[\"DronexInspection_620637907\"],\n  owners:[\"me\",\"IBM\"],\n  threshold: \"0.0\"\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 246,
+        "y": 694.333330154419,
+        "wires": [
+            [
+                "e286d1d4.92418"
+            ]
+        ]
+    },
+    {
+        "id": "e286d1d4.92418",
+        "type": "visual-recognition-v3",
+        "z": "ee77d0e0.fdf44",
+        "name": "Classify image",
+        "apikey": "22b037c8667afabd132c168317f8193da313d513",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 409.6072540283203,
+        "y": 693.7380361557007,
+        "wires": [
+            [
+                "511ca3b9.7a8d1c"
+            ]
+        ]
+    },
+    {
+        "id": "6cd79d42.b194a4",
+        "type": "ui_template",
+        "z": "ee77d0e0.fdf44",
+        "group": "c1a7d98f.3d18a8",
+        "name": "Analyzed Image",
+        "order": 1,
+        "width": "6",
+        "height": "4",
+        "format": "<img width=\"32\" height=\"32\" alt=\"image\" src=\"data:image/jpg;base64,{{msg.payload}}\"/>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 894.2404251098633,
+        "y": 193.06348514556885,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "962247f9.363358",
+        "type": "base64",
+        "z": "ee77d0e0.fdf44",
+        "name": "",
+        "x": 728.5936698913574,
+        "y": 189.90870094299316,
+        "wires": [
+            [
+                "6cd79d42.b194a4"
+            ]
+        ]
+    },
+    {
+        "id": "a41654f8.834f98",
+        "type": "ui_button",
+        "z": "ee77d0e0.fdf44",
+        "name": "Multiple Cracks Image",
+        "group": "7bebca6.44fbd34",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Multiple Cracks",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 179.21665954589844,
+        "y": 156.16665267944336,
+        "wires": [
+            [
+                "5a3fc2b1.0dd27c"
+            ]
+        ]
+    },
+    {
+        "id": "3cab7e25.eda4f2",
+        "type": "ui_button",
+        "z": "ee77d0e0.fdf44",
+        "name": "No Crack Image",
+        "group": "7bebca6.44fbd34",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "No Cracks",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 165.04998016357422,
+        "y": 199.99997901916504,
+        "wires": [
+            [
+                "7f65df7a.1a95b"
+            ]
+        ]
+    },
+    {
+        "id": "511ca3b9.7a8d1c",
+        "type": "function",
+        "z": "ee77d0e0.fdf44",
+        "name": "Retrieve VR Score for gauge",
+        "func": "var score = 0;\nif(msg.result.images[0].classifiers[0]){\n  var classes = msg.result.images[0].classifiers[0].classes; \n  score=classes[0].score;\n}\nmsg.payload = Math.round(score * 100);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 633.0333938598633,
+        "y": 693.6519041061401,
+        "wires": [
+            [
+                "1bcb3fd6.4a5be",
+                "cf12efca.db3c6"
+            ]
+        ]
+    },
+    {
+        "id": "a41f1e5.4d971e",
+        "type": "ui_button",
+        "z": "ee77d0e0.fdf44",
+        "name": "Slight Crack Image",
+        "group": "7bebca6.44fbd34",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Slight Cracks",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 171.83333587646484,
+        "y": 247.9375262260437,
+        "wires": [
+            [
+                "7ac6186e.924838"
+            ]
+        ]
+    },
+    {
+        "id": "a8e3f420.f1b088",
+        "type": "ui_button",
+        "z": "ee77d0e0.fdf44",
+        "name": "Could Be Cracks Image",
+        "group": "7bebca6.44fbd34",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Could Be Cracks?",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 181,
+        "y": 295.43752574920654,
+        "wires": [
+            [
+                "bfa636dd.7d99f8"
+            ]
+        ]
+    },
+    {
+        "id": "e2841583.00f7b8",
+        "type": "comment",
+        "z": "ee77d0e0.fdf44",
+        "name": "The blue buttons refer to buttons on the dashboard. Read images from file and display in the 'Analyzed Image' Template ",
+        "info": "",
+        "x": 471,
+        "y": 56,
+        "wires": []
+    },
+    {
+        "id": "ebea2ba2.9c84a8",
+        "type": "comment",
+        "z": "ee77d0e0.fdf44",
+        "name": "Set up for Visual Recognition Retrieve a Score from the classification and Display in a Gauge control",
+        "info": "",
+        "x": 462.32295989990234,
+        "y": 739.6508083343506,
+        "wires": []
+    },
+    {
+        "id": "1bf7c236.f45b7e",
+        "type": "os-get",
+        "z": "ee77d0e0.fdf44",
+        "name": "Get Image From Objectstore",
+        "container": "Crack Detection",
+        "objectname": "badcrack.jpg",
+        "filepath": "",
+        "filename": "",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 443,
+        "y": 105.33333015441895,
+        "wires": [
+            [
+                "962247f9.363358",
+                "157edb5e.7bf675"
+            ]
+        ]
+    },
+    {
+        "id": "5a3fc2b1.0dd27c",
+        "type": "os-get",
+        "z": "ee77d0e0.fdf44",
+        "name": "Get Image From Objectstore",
+        "container": "Crack Detection",
+        "objectname": "multiplecracks.jpg",
+        "filepath": "",
+        "filename": "",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 444,
+        "y": 155.33333015441895,
+        "wires": [
+            [
+                "962247f9.363358",
+                "157edb5e.7bf675"
+            ]
+        ]
+    },
+    {
+        "id": "7f65df7a.1a95b",
+        "type": "os-get",
+        "z": "ee77d0e0.fdf44",
+        "name": "Get Image From Objectstore",
+        "container": "Crack Detection",
+        "objectname": "nocrack.jpg",
+        "filepath": "",
+        "filename": "",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 436,
+        "y": 209.33333015441895,
+        "wires": [
+            [
+                "962247f9.363358",
+                "157edb5e.7bf675"
+            ]
+        ]
+    },
+    {
+        "id": "7ac6186e.924838",
+        "type": "os-get",
+        "z": "ee77d0e0.fdf44",
+        "name": "Get Image From Objectstore",
+        "container": "Crack Detection",
+        "objectname": "slightcrack.jpg",
+        "filepath": "",
+        "filename": "",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 442,
+        "y": 257.33333015441895,
+        "wires": [
+            [
+                "962247f9.363358",
+                "157edb5e.7bf675"
+            ]
+        ]
+    },
+    {
+        "id": "bfa636dd.7d99f8",
+        "type": "os-get",
+        "z": "ee77d0e0.fdf44",
+        "name": "Get Image From Objectstore",
+        "container": "Crack Detection",
+        "objectname": "couldbecrack.jpg",
+        "filepath": "",
+        "filename": "",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 437,
+        "y": 312.33333015441895,
+        "wires": [
+            [
+                "962247f9.363358",
+                "157edb5e.7bf675"
+            ]
+        ]
+    },
+    {
+        "id": "1ef34591.77399a",
+        "type": "ui_text_input",
+        "z": "ee77d0e0.fdf44",
+        "name": "Web image",
+        "label": "Web address for image",
+        "group": "7bebca6.44fbd34",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 159.28571319580078,
+        "y": 401.42855167388916,
+        "wires": [
+            [
+                "824a533f.7fa75"
+            ]
+        ]
+    },
+    {
+        "id": "824a533f.7fa75",
+        "type": "function",
+        "z": "ee77d0e0.fdf44",
+        "name": "Pass URL",
+        "func": "msg.url = msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 562.1428642272949,
+        "y": 441.4285774230957,
+        "wires": [
+            [
+                "2c8fbc6b.694bc4"
+            ]
+        ]
+    },
+    {
+        "id": "2c8fbc6b.694bc4",
+        "type": "http request",
+        "z": "ee77d0e0.fdf44",
+        "name": "",
+        "method": "GET",
+        "ret": "bin",
+        "url": "",
+        "tls": "",
+        "x": 745.0000305175781,
+        "y": 435.7142791748047,
+        "wires": [
+            [
+                "962247f9.363358",
+                "157edb5e.7bf675"
+            ]
+        ]
+    },
+    {
+        "id": "cf12efca.db3c6",
+        "type": "function",
+        "z": "ee77d0e0.fdf44",
+        "name": "Retrieve VR Scores and Drone Data",
+        "func": "var droneProps = {\n   \"name\" : \"Drone-1\",\n   \"lat\" : \"51.0632\",\n   \"lon\" : \"-1.308\",\n   \"altitude\": 13.6,\n   \"battery\": 79,\n   \"speed\": 0.2,\n   \"weblink\" : {name:\"Click for image\", url: msg.url},\n   \"icon\" :\"uav\",\n   \"iconColor\" :\"red\",\n   \"crack\" : 0\n};\n//Add randomize with fudge factor for variability\nvar tmp = parseFloat(droneProps.lat) + (Math.floor((Math.random() * 10) + 1)/500);\ndroneProps.lat = (Math.round(tmp * 100000)/100000).toString();\ntmp = parseFloat(droneProps.lon) + (Math.floor((Math.random() * 10) + 1)/500);\ndroneProps.lon = (Math.round(tmp * 100000)/100000).toString();\ndroneProps.altitude = droneProps.altitude + Math.round(((Math.random()*2-1)/3*10))/10;\ndroneProps.crack = msg.payload;    \nmsg.payload = droneProps;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 747.1428833007812,
+        "y": 568.5714712142944,
+        "wires": [
+            [
+                "7b3a3378.275fdc",
+                "9cf0a427.fa99c8"
+            ]
+        ]
+    },
+    {
+        "id": "7b3a3378.275fdc",
+        "type": "worldmap",
+        "z": "ee77d0e0.fdf44",
+        "name": "",
+        "lat": "",
+        "lon": "",
+        "zoom": "",
+        "layer": "",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "show",
+        "layers": "show",
+        "panit": "false",
+        "x": 1034.9999961853027,
+        "y": 514.2856912612915,
+        "wires": []
+    },
+    {
+        "id": "9cf0a427.fa99c8",
+        "type": "debug",
+        "z": "ee77d0e0.fdf44",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 1047.8571428571427,
+        "y": 587.1428571428571,
+        "wires": []
+    },
+    {
+        "id": "7685885.f33b078",
+        "type": "ui_group",
+        "z": "",
+        "name": "VR Score",
+        "tab": "b5d99dfe.7c111",
+        "order": 3,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "7bebca6.44fbd34",
+        "type": "ui_group",
+        "z": "",
+        "name": "Analyze Images",
+        "tab": "b5d99dfe.7c111",
+        "order": 1,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "c1a7d98f.3d18a8",
+        "type": "ui_group",
+        "z": "ee77d0e0.fdf44",
+        "name": "Image to VR Service for Analysis",
+        "tab": "b5d99dfe.7c111",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "6eb49753.5d3848",
+        "type": "os-config",
+        "z": "",
+        "cfgtype": "api",
+        "region": "dallas",
+        "projectId": "65a23ac47e39476994ef485a2eb516d5",
+        "userId": "aec3381187ef438fb59dc6c565f1a8e7",
+        "userName": "admin_d6b014be689b023d9c3e7d79a223b35b79475a18",
+        "password": "iTk.4U{,0N9ZS6_R",
+        "name": "MyOS"
+    },
+    {
+        "id": "b5d99dfe.7c111",
+        "type": "ui_tab",
+        "z": "ee77d0e0.fdf44",
+        "name": "Crack Detection Demo",
+        "icon": "dashboard",
+        "order": 1
+    }
+]

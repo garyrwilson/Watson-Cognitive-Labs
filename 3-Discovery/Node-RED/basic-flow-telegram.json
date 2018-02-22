@@ -1,0 +1,88 @@
+[
+    {
+        "id": "23f635be.0da1ea",
+        "type": "watson-conversation-v1",
+        "z": "5a27850c.f0c4ec",
+        "name": "Conversation",
+        "workspaceid": "efca2e61-fda8-4d27-9ec7-750aa4405fd6",
+        "multiuser": false,
+        "context": true,
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
+        "x": 572.0347290039062,
+        "y": 858.0208129882812,
+        "wires": [
+            [
+                "e812cb30.8f74c8"
+            ]
+        ]
+    },
+    {
+        "id": "e50f9110.8f4e3",
+        "type": "telegram command",
+        "z": "5a27850c.f0c4ec",
+        "name": "",
+        "command": "/phone",
+        "bot": "5bdd8f89.683d",
+        "x": 148.03473663330078,
+        "y": 852.0208206176758,
+        "wires": [
+            [
+                "8cd2535c.1cf09"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2459d6bb.eb40ca",
+        "type": "telegram sender",
+        "z": "5a27850c.f0c4ec",
+        "name": "",
+        "bot": "5bdd8f89.683d",
+        "x": 1082.0347595214844,
+        "y": 850.0208611488342,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e812cb30.8f74c8",
+        "type": "function",
+        "z": "5a27850c.f0c4ec",
+        "name": "Send Conversation Response",
+        "func": "var output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : output[t]\n    };\n    node.send(msg);\n}\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 831.0347290039062,
+        "y": 798.0208129882811,
+        "wires": [
+            [
+                "2459d6bb.eb40ca"
+            ]
+        ]
+    },
+    {
+        "id": "8cd2535c.1cf09",
+        "type": "function",
+        "z": "5a27850c.f0c4ec",
+        "name": "Prepare for Conversation",
+        "func": "msg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 354.03472900390625,
+        "y": 796.0208129882812,
+        "wires": [
+            [
+                "23f635be.0da1ea"
+            ]
+        ]
+    },
+    {
+        "id": "5bdd8f89.683d",
+        "type": "telegram bot",
+        "z": "",
+        "botname": "WilsonGWBot",
+        "usernames": "",
+        "chatids": ""
+    }
+]

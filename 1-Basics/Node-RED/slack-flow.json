@@ -1,0 +1,68 @@
+[
+    {
+        "id": "ba779be1.e6aa48",
+        "type": "slackbot-listen",
+        "z": "9fdb4a04.8ee9d8",
+        "slackbot": "7a87901a.3dd39",
+        "name": "",
+        "x": 142.5000228881836,
+        "y": 374.3332996368408,
+        "wires": [
+            [
+                "c2cdddba.2baf8"
+            ]
+        ]
+    },
+    {
+        "id": "da987f85.e3ea8",
+        "type": "slackbot-reply",
+        "z": "9fdb4a04.8ee9d8",
+        "slackbot": "7a87901a.3dd39",
+        "name": "",
+        "x": 714.2142791748047,
+        "y": 411.33330249786377,
+        "wires": []
+    },
+    {
+        "id": "c2cdddba.2baf8",
+        "type": "watson-conversation-v1",
+        "z": "9fdb4a04.8ee9d8",
+        "name": "",
+        "workspaceid": "efca2e61-fda8-4d27-9ec7-750aa4405fd6",
+        "multiuser": false,
+        "context": true,
+        "empty-payload": false,
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
+        "x": 335.7143096923828,
+        "y": 421.19044494628906,
+        "wires": [
+            [
+                "4621ec25.8f6054"
+            ]
+        ]
+    },
+    {
+        "id": "4621ec25.8f6054",
+        "type": "function",
+        "z": "9fdb4a04.8ee9d8",
+        "name": "Postprocessing",
+        "func": "var output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = output[t];\n    node.send(msg);\n}\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 356.9047269821167,
+        "wires": [
+            [
+                "da987f85.e3ea8"
+            ]
+        ]
+    },
+    {
+        "id": "7a87901a.3dd39",
+        "type": "slackbot-controller",
+        "z": "",
+        "name": "stsa2018-gw",
+        "bot_token": "xoxb-296907854230-kNkjV8kb3mbE5pp31ISZA45r"
+    }
+]

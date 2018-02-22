@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+	  My BOT
+	</title>
+	<link rel="stylesheet"
+        type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  </head>
+  <body>
+
+    <div class="container">
+      <div id="no-script"class="bg-info">
+        This application needs JavaScript enabled in your browser!
+      </div>
+      <div id="id_contextdump"></div>
+
+      <h1>My BOT</h1>
+      <div id=id_botchathistory>
+	  </div>
+
+	  <div>
+	      <form onsubmit="return false;">
+            <label for="id_chattext">Your Input: </label>
+            <input type="text" name="chattext" id="id_chattext">
+	      </form>
+	      <button id="chatbutton" onclick="javascript:onChatClick()">Send</button>
+	  </div>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+      $(document).ready(function() {
+          javascriptCheck();
+          invokeAjax('init')
+      });
+
+      $("#id_chattext").keyup(function(event){
+        event.preventDefault();
+        if(event.keyCode == 13){
+            $("#chatbutton").click();
+        }
+      });
+      // if javascript is enabled on the browser then can
+      // remove the warning message
+      function javascriptCheck() {
+        $('#no-script').remove();
+      }
+
+      function createNewDiv(who, message) {
+        var txt = who + ' : ' + message;
+        return $('<div></div>').html(txt);
+      }
+
+      function chat(person, txt) {
+        $('#id_botchathistory').append(createNewDiv(person, txt));
+      }
+
+      function processOK(response) {
+        for (var r in response.output.text) {
+          chat('Bot', response.output.text[r]);
+        }
+        $('#id_contextdump').data('convContext', response.context);
+      }
+
+      function processNotOK() {
+        chat('Error', 'Error whilst attempting to talk to Bot');
+      }
+
+      function invokeAjax(message) {
+        console.log($('#id_contextdump').data('convContext'))
+        $.ajax({
+          type: 'POST',
+          url: 'botchat',
+          data: { message, context: $('#id_contextdump').data('convContext')},
+          success: processOK,
+          error: processNotOK
+        });
+      }
+
+      // User has entered some text.
+      function onChatClick() {
+        var txt = $('#id_chattext').val();
+        $('#id_chattext').val('');
+        chat('You', txt);
+        invokeAjax(txt);
+      }
+
+    </script>
+  </body>
+</html>

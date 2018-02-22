@@ -1,0 +1,224 @@
+[
+    {
+        "id": "30999947.506066",
+        "type": "slackbot-listen",
+        "z": "a564e440.d6ffb8",
+        "slackbot": "7a87901a.3dd39",
+        "name": "",
+        "x": 115.71417999267578,
+        "y": 533.095232963562,
+        "wires": [
+            [
+                "f60c9e9f.db69f"
+            ]
+        ]
+    },
+    {
+        "id": "7a764b1e.2a92a4",
+        "type": "slackbot-reply",
+        "z": "a564e440.d6ffb8",
+        "slackbot": "7a87901a.3dd39",
+        "name": "",
+        "x": 1085.0474014282227,
+        "y": 531.9999861717224,
+        "wires": []
+    },
+    {
+        "id": "f60c9e9f.db69f",
+        "type": "watson-conversation-v1",
+        "z": "a564e440.d6ffb8",
+        "name": "",
+        "workspaceid": "114c4bbd-8167-4e05-b19f-01c698158a20",
+        "multiuser": false,
+        "context": true,
+        "empty-payload": false,
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
+        "x": 300.5951347351074,
+        "y": 501.61905908584595,
+        "wires": [
+            [
+                "3761ad54.238b52"
+            ]
+        ]
+    },
+    {
+        "id": "733bac7.2abb254",
+        "type": "function",
+        "z": "a564e440.d6ffb8",
+        "name": "Postprocessing",
+        "func": "// Reset context variables when New Contract conversation complete\nif (msg.payload.context.contractstatus == 'found') {\n    msg.payload.context.costpermonth = null;\n    msg.payload.context.datapermonth = null;\n    msg.payload.context.startdate = null;\n    msg.payload.context.contractstatus = null;\n}\nvar output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = output[t];\n    node.send(msg);\n}\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 644.8808250427246,
+        "y": 504.4761862754822,
+        "wires": [
+            [
+                "7a764b1e.2a92a4"
+            ]
+        ]
+    },
+    {
+        "id": "3761ad54.238b52",
+        "type": "switch",
+        "z": "a564e440.d6ffb8",
+        "name": "",
+        "property": "payload.context.action",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "review",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 459.52364921569824,
+        "y": 463.33333444595337,
+        "wires": [
+            [
+                "a1651e8a.c0c65"
+            ],
+            [
+                "733bac7.2abb254"
+            ]
+        ]
+    },
+    {
+        "id": "a1651e8a.c0c65",
+        "type": "change",
+        "z": "a564e440.d6ffb8",
+        "name": "Update Payload",
+        "rules": [
+            {
+                "t": "set",
+                "p": "brand",
+                "pt": "msg",
+                "to": "payload.context.brandreview",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.input.text",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 638.0951194763184,
+        "y": 426.19048261642456,
+        "wires": [
+            [
+                "ffb68126.ece15"
+            ]
+        ]
+    },
+    {
+        "id": "ffb68126.ece15",
+        "type": "natural-language-understanding",
+        "z": "a564e440.d6ffb8",
+        "name": "NLU",
+        "categories": false,
+        "concepts": false,
+        "maxconcepts": "8",
+        "doc-emotion": false,
+        "doc-emotion-target": "",
+        "doc-sentiment": true,
+        "doc-sentiment-target": "",
+        "entity": true,
+        "entity-emotion": false,
+        "entity-sentiment": false,
+        "maxentities": "50",
+        "keyword": false,
+        "keyword-emotion": false,
+        "keyword-sentiment": false,
+        "maxkeywords": "50",
+        "metadata": false,
+        "relation": false,
+        "semantic": false,
+        "semantic-entities": false,
+        "semantic-keywords": false,
+        "maxsemantics": "50",
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/natural-language-understanding/api",
+        "x": 823.333194732666,
+        "y": 390.47621059417725,
+        "wires": [
+            [
+                "a578fe5e.c670d",
+                "6c06c1df.f4471"
+            ]
+        ]
+    },
+    {
+        "id": "a578fe5e.c670d",
+        "type": "function",
+        "z": "a564e440.d6ffb8",
+        "name": "Build Review Message",
+        "func": "// Retrieve NLU score for review\nvar score = msg.features.sentiment.document.score;\n \n// Build part one of response containing sentiment score\nif (score >= 0) {\n    var sentiment = \"positive\";\n}\nelse {\n    var sentiment = \"negative\";\n}\nabsScore = Math.abs(score);\nvar outputA = \"Watson calculates your \" + msg.brand + \" review to be \" + Math.round(absScore * 100) + \"% \"+ sentiment + \". \";\n \n// Build part two of response\nswitch (true) {\n  case score > 0.7:\n    var outputB = \"A big fan then, I see!\";\n    break;\n  case score > 0.2:\n    var outputB = \"I guess you think \" + msg.brand + \" phones are mostly OK.\";\n    break;\n  case score > -0.2:\n    var outputB = \"You sound pretty ambivalent about \" + msg.brand + \" products.\";\n    break;\n  case score > -0.7:\n    var outputB = \"OK so you definitely don't like \" + msg.brand + \" phones. Time for a change!\";\n    break;\n  default:\n    var outputB = \"Clearly not a fan, at all.\";\n}\n \n// Send consolidated message to Slack\nmsg.payload = outputA + outputB;\nnode.send(msg);\n \nreturn ;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1031.66650390625,
+        "y": 434.0476264953613,
+        "wires": [
+            [
+                "7a764b1e.2a92a4"
+            ]
+        ]
+    },
+    {
+        "id": "6c06c1df.f4471",
+        "type": "function",
+        "z": "a564e440.d6ffb8",
+        "name": "Clear Conversation Context",
+        "func": "msg.payload = \"hi\";\nmsg.params = {\n    context : {}\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1053.333236694336,
+        "y": 351.66667890548706,
+        "wires": [
+            [
+                "14551fc.910afe"
+            ]
+        ]
+    },
+    {
+        "id": "14551fc.910afe",
+        "type": "delay",
+        "z": "a564e440.d6ffb8",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1027.1426391601562,
+        "y": 248.33334827423096,
+        "wires": [
+            [
+                "f60c9e9f.db69f"
+            ]
+        ]
+    },
+    {
+        "id": "7a87901a.3dd39",
+        "type": "slackbot-controller",
+        "z": "",
+        "name": "stsa2018-gw",
+        "bot_token": "xoxb-296907854230-kNkjV8kb3mbE5pp31ISZA45r"
+    }
+]

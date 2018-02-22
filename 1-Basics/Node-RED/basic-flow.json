@@ -1,0 +1,119 @@
+[
+   {
+      "id":"d0dbffd.4eac7",
+      "type":"http in",
+      "z":"368159ea.4fa426",
+      "name":"BOT Home Page",
+      "url":"/bot",
+      "method":"get",
+      "upload":false,
+      "swaggerDoc":"",
+      "x":196.99999999999997,
+      "y":83.99999999999999,
+      "wires":[
+         [
+            "8bcdfcbc.5dac4"
+         ]
+      ]
+   },
+   {
+      "id":"8bcdfcbc.5dac4",
+      "type":"template",
+      "z":"368159ea.4fa426",
+      "name":"Conversation BOT Template",
+      "field":"payload",
+      "fieldType":"msg",
+      "format":"handlebars",
+      "syntax":"mustache",
+      "template":"<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>\n\t  My BOT\n\t</title>\n\t<link rel=\"stylesheet\"\n        type=\"text/css\"\n        href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" />\n  </head>\n  <body>\n\n    <div class=\"container\">\n      <div id=\"no-script\"class=\"bg-info\">\n        This application needs JavaScript enabled in your browser!\n      </div>\n      <div id=\"id_contextdump\"></div>\n\n      <h1>My BOT</h1>\n      <div id=id_botchathistory>\n\t  </div>\n\n\t  <div>\n\t      <form onsubmit=\"return false;\">\n            <label for=\"id_chattext\">Your Input: </label>\n            <input type=\"text\" name=\"chattext\" id=\"id_chattext\">\n\t      </form>\n\t      <button id=\"chatbutton\" onclick=\"javascript:onChatClick()\">Send</button>\n\t  </div>\n    </div>\n    <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-2.1.4.min.js\"></script>\n    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n\n    <script type=\"text/javascript\">\n\n      $(document).ready(function() {\n          javascriptCheck();\n          invokeAjax('init')\n      });\n\n      $(\"#id_chattext\").keyup(function(event){\n        event.preventDefault();\n        if(event.keyCode == 13){\n            $(\"#chatbutton\").click();\n        }\n      });\n      // if javascript is enabled on the browser then can\n      // remove the warning message\n      function javascriptCheck() {\n        $('#no-script').remove();\n      }\n\n      function createNewDiv(who, message) {\n        var txt = who + ' : ' + message;\n        return $('<div></div>').html(txt);\n      }\n\n      function chat(person, txt) {\n        $('#id_botchathistory').append(createNewDiv(person, txt));\n      }\n\n      function processOK(response) {\n        for (var r in response.output.text) {\n          chat('Bot', response.output.text[r]);\n        }\n        $('#id_contextdump').data('convContext', response.context);\n      }\n\n      function processNotOK() {\n        chat('Error', 'Error whilst attempting to talk to Bot');\n      }\n\n      function invokeAjax(message) {\n        console.log($('#id_contextdump').data('convContext'))\n        $.ajax({\n          type: 'POST',\n          url: 'botchat',\n          data: { message, context: $('#id_contextdump').data('convContext')},\n          success: processOK,\n          error: processNotOK\n        });\n      }\n\n      // User has entered some text.\n      function onChatClick() {\n        var txt = $('#id_chattext').val();\n        $('#id_chattext').val('');\n        chat('You', txt);\n        invokeAjax(txt);\n      }\n\n    </script>\n  </body>\n</html>",
+      "output":"str",
+      "x":469,
+      "y":88,
+      "wires":[
+         [
+            "7629553f.923bcc"
+         ]
+      ]
+   },
+   {
+      "id":"7629553f.923bcc",
+      "type":"http response",
+      "z":"368159ea.4fa426",
+      "name":"",
+      "statusCode":"",
+      "headers":{
+
+      },
+      "x":702.9999999999999,
+      "y":87.99999999999999,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"c69e206e.4ec78",
+      "type":"http in",
+      "z":"368159ea.4fa426",
+      "name":"BOT REST API",
+      "url":"/botchat",
+      "method":"post",
+      "upload":false,
+      "swaggerDoc":"",
+      "x":204.99999999999997,
+      "y":189.99999999999997,
+      "wires":[
+         [
+            "cb49311a.a3ee8"
+         ]
+      ]
+   },
+   {
+      "id":"cb49311a.a3ee8",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Preprocessing",
+      "func":"msg.params = msg.params || {};\nmsg.params.context = msg.payload.context;\nmsg.payload = msg.payload.message;\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":435,
+      "y":204,
+      "wires":[
+         [
+            "b2540ef6.532a8"
+         ]
+      ]
+   },
+   {
+      "id":"13faa021.994fa",
+      "type":"http response",
+      "z":"368159ea.4fa426",
+      "name":"",
+      "statusCode":"",
+      "headers":{
+
+      },
+      "x":821,
+      "y":200,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"b2540ef6.532a8",
+      "type":"watson-conversation-v1",
+      "z":"368159ea.4fa426",
+      "name":"",
+      "workspaceid":"efca2e61-fda8-4d27-9ec7-750aa4405fd6",
+      "multiuser":false,
+      "context":true,
+      "default-endpoint":true,
+      "service-endpoint":"https://gateway.watsonplatform.net/conversation/api",
+      "x":641,
+      "y":188,
+      "wires":[
+         [
+            "13faa021.994fa"
+         ]
+      ]
+   }
+]

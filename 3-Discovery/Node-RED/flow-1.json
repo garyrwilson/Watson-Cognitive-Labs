@@ -1,0 +1,152 @@
+[
+    {
+        "id": "a1db9717.387648",
+        "type": "watson-conversation-v1",
+        "z": "59b347a.a4798b8",
+        "name": "Conversation",
+        "workspaceid": "efca2e61-fda8-4d27-9ec7-750aa4405fd6",
+        "multiuser": false,
+        "context": true,
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
+        "x": 545,
+        "y": 175.3333282470703,
+        "wires": [
+            [
+                "c11c95e3.dfb688"
+            ]
+        ]
+    },
+    {
+        "id": "a999ceb5.d148c",
+        "type": "telegram command",
+        "z": "59b347a.a4798b8",
+        "name": "",
+        "command": "/phone",
+        "bot": "4b287f18.5ee8b",
+        "x": 121.00000762939453,
+        "y": 169.33333587646484,
+        "wires": [
+            [
+                "2e206471.e816cc"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "9d5dcb13.258d38",
+        "type": "telegram sender",
+        "z": "59b347a.a4798b8",
+        "name": "",
+        "bot": "4b287f18.5ee8b",
+        "x": 1075.000099182129,
+        "y": 185.6667137145996,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c11c95e3.dfb688",
+        "type": "function",
+        "z": "59b347a.a4798b8",
+        "name": "Send Conversation Response",
+        "func": "var output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : output[t]\n    };\n    node.send(msg);\n}\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 804,
+        "y": 115.3333282470702,
+        "wires": [
+            [
+                "9d5dcb13.258d38"
+            ]
+        ]
+    },
+    {
+        "id": "89ce5338.8a702",
+        "type": "function",
+        "z": "59b347a.a4798b8",
+        "name": "Prepare for Conversation",
+        "func": "msg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 327,
+        "y": 113.33332824707031,
+        "wires": [
+            [
+                "a1db9717.387648"
+            ]
+        ]
+    },
+    {
+        "id": "2e206471.e816cc",
+        "type": "function",
+        "z": "59b347a.a4798b8",
+        "name": "Prepare For Discovery",
+        "func": "msg.chatId = msg.payload.chatId;\nmsg.discoveryparams = {};\nmsg.discoveryparams.query = msg.payload.content;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 310.83335876464844,
+        "y": 299.99999046325684,
+        "wires": [
+            [
+                "2b902791.e77d48"
+            ]
+        ]
+    },
+    {
+        "id": "2b902791.e77d48",
+        "type": "watson-discovery-v1",
+        "z": "59b347a.a4798b8",
+        "name": "",
+        "environmentname": "",
+        "environment_id": "1ba26c01-0aed-43fe-801e-3972ccea3a22",
+        "collection_id": "83bf254d-edb5-4e8c-8984-37491bc36329",
+        "configurationname": "",
+        "configuration_id": "",
+        "language_code": "en",
+        "collection_name": "",
+        "count": "1",
+        "passages": false,
+        "nlp_query": true,
+        "query": "",
+        "filter": "enriched_Accepted_Answer.sentiment.document.label:!\"negative\"",
+        "aggregation": "",
+        "return": "",
+        "description": "",
+        "size": 0,
+        "discovery-method": "query",
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/discovery/api",
+        "x": 550.833381652832,
+        "y": 250.0000114440918,
+        "wires": [
+            [
+                "3e6afdff.b6ddf2"
+            ]
+        ]
+    },
+    {
+        "id": "3e6afdff.b6ddf2",
+        "type": "function",
+        "z": "59b347a.a4798b8",
+        "name": "Send Discovery Response",
+        "func": "var question = msg.search_results.results[0].Title;\nvar answer = msg.search_results.results[0].Accepted_Answer;\n \nmsg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : \"I found this question that is similar to yours: \" + question\n    };\nnode.send(msg);\n \n// Use setTimeout function to ensure small delay in sending\n// 2nd message to ensure answer arrives after question.\n \nsetTimeout(function (){\n    msg.payload = {\n            chatId : msg.chatId,\n            type : \"message\",\n            content : \"And this is the answer: \" + answer\n        };\n    node.send(msg);\n \n    return;\n}, 500);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 819.9999771118164,
+        "y": 301.6666488647461,
+        "wires": [
+            [
+                "9d5dcb13.258d38"
+            ]
+        ]
+    },
+    {
+        "id": "4b287f18.5ee8b",
+        "type": "telegram bot",
+        "z": "",
+        "botname": "WilsonGWBot",
+        "usernames": "",
+        "chatids": ""
+    }
+]

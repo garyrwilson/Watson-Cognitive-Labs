@@ -1,0 +1,838 @@
+[
+    {
+        "id": "42442dca.513ac4",
+        "type": "ui_button",
+        "z": "9fd030c3.226e1",
+        "name": "Motorcycle",
+        "group": "6641a5d8.4f5e0c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Motorcycle",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 105.16107940673828,
+        "y": 119.33333587646484,
+        "wires": [
+            [
+                "9c209feb.54465"
+            ]
+        ]
+    },
+    {
+        "id": "5a18c0ac.84e2b",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "VR Insurance Claim Inputs",
+        "func": "global.set(\"imgData\",msg.payload); \nglobal.set(\"fileName\",msg.filename);\nmsg.headers = { \"Content - Type \":\"image / jpeg \"};\nmsg.params = {classifier_ids:[\"insurancexclaim_2060509944\"],\n  owners:[\"me\",\"IBM\"],\n  threshold: \"0.0\"\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 322.34375,
+        "y": 830.4325079917908,
+        "wires": [
+            [
+                "fd4f748c.ba9298"
+            ]
+        ]
+    },
+    {
+        "id": "f59ea31e.56f85",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "Retrieve VR Scores",
+        "func": "// Move Watson VR results to local variables\n\nvar classifiers  = msg.result.images[0].classifiers;\nvar classCount = msg.result.custom_classes;\n\nvar className = \"\";\nvar score = 0;\nvar scores = { \"Type\":0 };\n\n//var filePath = global.get(\"fileName\");\n\n// Loop through results ...\n//   className = name of class(es) specified when building Watson VR classifier\n//   score = confidence level of Watson VR for each trained class\n// ... and set up msg.payload results - a {className : score} pair for each class\n\nif (classCount > 0) { \n    for (var i = 0 ; i<classCount; i++){\n        className = classifiers[0].classes[i].class;\n        score = classifiers[0].classes[i].score;\n        scores[className] = (score*100).toFixed(0);\n    }\n    msg.payload = scores;\n}\nelse {\n    msg.payload = {};\n}\n\nreturn msg;\n",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 772.8200531005859,
+        "y": 837.920820236206,
+        "wires": [
+            [
+                "de5f7b54.9b5d68",
+                "65a9f151.18a42",
+                "a74f87b4.723dd8",
+                "ccd815c.d2e27e8"
+            ]
+        ]
+    },
+    {
+        "id": "447f3194.10ca6",
+        "type": "ui_template",
+        "z": "9fd030c3.226e1",
+        "group": "6641a5d8.4f5e0c",
+        "name": "Analyzed Image",
+        "order": 8,
+        "width": "6",
+        "height": "6",
+        "format": "<img width=\"32\" height=\"32\" alt=\"image\" src=\"data:image/jpg;base64,{{msg.payload}}\"/>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 527.9904632568359,
+        "y": 633.9802379608154,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "98df058e.206528",
+        "type": "base64",
+        "z": "9fd030c3.226e1",
+        "name": "",
+        "x": 310.3436164855957,
+        "y": 640.825364112854,
+        "wires": [
+            [
+                "447f3194.10ca6"
+            ]
+        ]
+    },
+    {
+        "id": "39dfd415.086ecc",
+        "type": "ui_button",
+        "z": "9fd030c3.226e1",
+        "name": "Vandalism",
+        "group": "6641a5d8.4f5e0c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Vandalism",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 105.96666717529297,
+        "y": 167.33333587646484,
+        "wires": [
+            [
+                "c4b111b7.cc1da"
+            ]
+        ]
+    },
+    {
+        "id": "8323743b.bd6f78",
+        "type": "ui_button",
+        "z": "9fd030c3.226e1",
+        "name": "Flat Tyre",
+        "group": "6641a5d8.4f5e0c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Flat Tyre",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 93.04999542236328,
+        "y": 221.16666412353516,
+        "wires": [
+            [
+                "70a03691.87c398"
+            ]
+        ]
+    },
+    {
+        "id": "c3bc630c.36e7b",
+        "type": "ui_gauge",
+        "z": "9fd030c3.226e1",
+        "name": "",
+        "group": "3950bec4.70c7b2",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Motorcycle",
+        "label": "percent",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1272.250129699707,
+        "y": 781.7154030799866,
+        "wires": []
+    },
+    {
+        "id": "1a785f49.ba9ee1",
+        "type": "ui_button",
+        "z": "9fd030c3.226e1",
+        "name": "Broken Windscreen",
+        "group": "6641a5d8.4f5e0c",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Broken Windscreen",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 122.3333511352539,
+        "y": 270.35420989990234,
+        "wires": [
+            [
+                "c5660a59.b57b98"
+            ]
+        ]
+    },
+    {
+        "id": "9fba3189.f384f",
+        "type": "ui_button",
+        "z": "9fd030c3.226e1",
+        "name": "No Damage",
+        "group": "6641a5d8.4f5e0c",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "No Damage",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 100.25000762939453,
+        "y": 330.3541946411133,
+        "wires": [
+            [
+                "5daa09f3.bf2248"
+            ]
+        ]
+    },
+    {
+        "id": "b46d0650.154e78",
+        "type": "comment",
+        "z": "9fd030c3.226e1",
+        "name": "Set up for Visual Recognition: retrieve scores for all trained classes from the Watson VR classifier and display in a gauge control",
+        "info": "",
+        "x": 456.166748046875,
+        "y": 718.7499942779541,
+        "wires": []
+    },
+    {
+        "id": "9c209feb.54465",
+        "type": "os-get",
+        "z": "9fd030c3.226e1",
+        "name": "Get Image From Objectstore",
+        "container": "insurance",
+        "objectname": "0.jpg",
+        "filepath": "",
+        "filename": "11.jpg",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 384.00000762939453,
+        "y": 108.00000762939453,
+        "wires": [
+            [
+                "d3e4bd43.87667",
+                "8804fa13.dce138",
+                "56d4462e.50e008"
+            ]
+        ]
+    },
+    {
+        "id": "c4b111b7.cc1da",
+        "type": "os-get",
+        "z": "9fd030c3.226e1",
+        "name": "Get Image From Objectstore",
+        "container": "insurance",
+        "objectname": "2.jpg",
+        "filepath": "",
+        "filename": "11.jpg",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 382.00000762939453,
+        "y": 169.00000762939453,
+        "wires": [
+            [
+                "d3e4bd43.87667",
+                "8804fa13.dce138",
+                "56d4462e.50e008"
+            ]
+        ]
+    },
+    {
+        "id": "70a03691.87c398",
+        "type": "os-get",
+        "z": "9fd030c3.226e1",
+        "name": "Get Image From Objectstore",
+        "container": "insurance",
+        "objectname": "5.jpg",
+        "filepath": "",
+        "filename": "11.jpg",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 374.00000762939453,
+        "y": 223.00000762939453,
+        "wires": [
+            [
+                "d3e4bd43.87667",
+                "8804fa13.dce138",
+                "56d4462e.50e008"
+            ]
+        ]
+    },
+    {
+        "id": "c5660a59.b57b98",
+        "type": "os-get",
+        "z": "9fd030c3.226e1",
+        "name": "Get Image From Objectstore",
+        "container": "insurance",
+        "objectname": "9.jpg",
+        "filepath": "",
+        "filename": "11.jpg",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 371.33336639404297,
+        "y": 279.000036239624,
+        "wires": [
+            [
+                "d3e4bd43.87667",
+                "8804fa13.dce138",
+                "56d4462e.50e008"
+            ]
+        ]
+    },
+    {
+        "id": "5daa09f3.bf2248",
+        "type": "os-get",
+        "z": "9fd030c3.226e1",
+        "name": "Get Image From Objectstore",
+        "container": "insurance",
+        "objectname": "1.jpg",
+        "filepath": "",
+        "filename": "11.jpg",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 385.77774810791016,
+        "y": 339.7777786254883,
+        "wires": [
+            [
+                "d3e4bd43.87667",
+                "8804fa13.dce138",
+                "56d4462e.50e008"
+            ]
+        ]
+    },
+    {
+        "id": "8b87b99d.f06ad8",
+        "type": "ui_gauge",
+        "z": "9fd030c3.226e1",
+        "name": "",
+        "group": "3950bec4.70c7b2",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Vandalism",
+        "label": "percent",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1261.250129699707,
+        "y": 818.7500710487366,
+        "wires": []
+    },
+    {
+        "id": "de5f7b54.9b5d68",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "Motorcycle Score",
+        "func": "// The variable name here is msg.payload.<classname from Watson VR>\nvar mc = msg.payload.motorcycleaccident;\nmsg.payload=mc;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1047.2501029968262,
+        "y": 781.7501065731049,
+        "wires": [
+            [
+                "c3bc630c.36e7b"
+            ]
+        ]
+    },
+    {
+        "id": "65a9f151.18a42",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "Vandalism",
+        "func": "// The variable name here is msg.payload.<classname from Watson VR>\nvar vand = msg.payload.vandalism;\nmsg.payload=vand;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1023.750129699707,
+        "y": 816.7500710487366,
+        "wires": [
+            [
+                "8b87b99d.f06ad8"
+            ]
+        ]
+    },
+    {
+        "id": "a74f87b4.723dd8",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "Flat Tyre",
+        "func": "// The variable name here is msg.payload.<classname from Watson VR>\nvar flat = msg.payload.flattire;\nmsg.payload=flat;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1014.750129699707,
+        "y": 855.7500710487366,
+        "wires": [
+            [
+                "85a9f00b.be835"
+            ]
+        ]
+    },
+    {
+        "id": "85a9f00b.be835",
+        "type": "ui_gauge",
+        "z": "9fd030c3.226e1",
+        "name": "",
+        "group": "3950bec4.70c7b2",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Flat Tyre",
+        "label": "percent",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1282.250129699707,
+        "y": 856.2500710487366,
+        "wires": []
+    },
+    {
+        "id": "ccd815c.d2e27e8",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "Broken Windscrean",
+        "func": "// The variable name here is msg.payload.<classname from Watson VR>\nvar brkwind = msg.payload.brokenwindshield;\nmsg.payload=brkwind;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1043.750129699707,
+        "y": 892.7500710487366,
+        "wires": [
+            [
+                "362f4661.d2f15a"
+            ]
+        ]
+    },
+    {
+        "id": "362f4661.d2f15a",
+        "type": "ui_gauge",
+        "z": "9fd030c3.226e1",
+        "name": "",
+        "group": "3950bec4.70c7b2",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Broken Windscrean",
+        "label": "percent",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1252.750129699707,
+        "y": 893.2500710487366,
+        "wires": []
+    },
+    {
+        "id": "bfb324bb.6fbaa8",
+        "type": "ui_text_input",
+        "z": "9fd030c3.226e1",
+        "name": "Image URL",
+        "label": "Image URL Input",
+        "group": "6641a5d8.4f5e0c",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 102.00001525878906,
+        "y": 462.0000190734863,
+        "wires": [
+            [
+                "79f48f8f.50011"
+            ]
+        ]
+    },
+    {
+        "id": "7fb4ec14.f12e24",
+        "type": "ui_button",
+        "z": "9fd030c3.226e1",
+        "name": "Random",
+        "group": "6641a5d8.4f5e0c",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Random Image",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 91.75000762939453,
+        "y": 390.00000762939453,
+        "wires": [
+            [
+                "310f3dfb.4d9bc2"
+            ]
+        ]
+    },
+    {
+        "id": "b8d82a16.9c6248",
+        "type": "os-get",
+        "z": "9fd030c3.226e1",
+        "name": "Get Image From Objectstore",
+        "container": "insurance",
+        "objectname": "msg.filename",
+        "filepath": "",
+        "filename": "11.jpg",
+        "mode": "1",
+        "osconfig": "6eb49753.5d3848",
+        "x": 669.4722747802734,
+        "y": 390.1388831138611,
+        "wires": [
+            [
+                "d3e4bd43.87667",
+                "8804fa13.dce138",
+                "56d4462e.50e008"
+            ]
+        ]
+    },
+    {
+        "id": "310f3dfb.4d9bc2",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "Generate Random Image File",
+        "func": "// Images in object storage are x.JPG, where x = 0..9\nrnd = Math.floor ( Math.random() * (9 - 0) + 0);\nmsg.objectname = rnd + \".jpg\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370.0000534057617,
+        "y": 390.25001525878906,
+        "wires": [
+            [
+                "b8d82a16.9c6248"
+            ]
+        ]
+    },
+    {
+        "id": "79f48f8f.50011",
+        "type": "change",
+        "z": "9fd030c3.226e1",
+        "name": "Set URL",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 347.3333282470703,
+        "y": 467.7777967453003,
+        "wires": [
+            [
+                "7a670bdd.311794"
+            ]
+        ]
+    },
+    {
+        "id": "7a670bdd.311794",
+        "type": "http request",
+        "z": "9fd030c3.226e1",
+        "name": "",
+        "method": "GET",
+        "ret": "bin",
+        "url": "",
+        "tls": "",
+        "x": 640.2221984863281,
+        "y": 467.1110782623291,
+        "wires": [
+            [
+                "56d4462e.50e008",
+                "d3e4bd43.87667",
+                "8804fa13.dce138"
+            ]
+        ]
+    },
+    {
+        "id": "d76e3d1.f3898c",
+        "type": "comment",
+        "z": "9fd030c3.226e1",
+        "name": "Get results from Watson VR untrained classifier",
+        "info": "",
+        "x": 216.00001525878906,
+        "y": 957.9999523162842,
+        "wires": []
+    },
+    {
+        "id": "69aeb3c1.31355c",
+        "type": "ui_template",
+        "z": "9fd030c3.226e1",
+        "group": "421b6c23.f94184",
+        "name": "Classes Identified",
+        "order": 0,
+        "width": "6",
+        "height": "6",
+        "format": "<div layout=”row” layout-align=”start center”>\n<span flex=\"70\"><b><i>Class</i></b></span>\n<span flex=\"30\"><b><i>Score (%)</i></b></span>\n</div>\n<div layout=”row” layout-align=”start center” ng-repeat=\"x in msg.payload.imagelist\">\n     <span flex=\"70\"><i>{{x.class}}</i></span>\n     <span flex=\"30\">{{x.score}}</span>\n</div>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 800.0000762939453,
+        "y": 1041.9999389648438,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1ebcb482.dafddb",
+        "type": "function",
+        "z": "9fd030c3.226e1",
+        "name": "Convert for Table",
+        "func": "// Create array entry for each image class found.\n\nvar images = [];\nfor (i = 0; i < msg.result.images[0].classifiers[0].classes.length; i++) {\n    images.push({class: msg.result.images[0].classifiers[0].classes[i].class,\n                      score: (msg.result.images[0].classifiers[0].classes[i].score * 100).toFixed(0)\n                    })\n}\nmsg.payload = {\n    imagelist: images,\n};\nreturn msg;\n",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 554.0000476837158,
+        "y": 1041.9999675750732,
+        "wires": [
+            [
+                "69aeb3c1.31355c"
+            ]
+        ]
+    },
+    {
+        "id": "76dd2dd.69430d4",
+        "type": "visual-recognition-v3",
+        "z": "9fd030c3.226e1",
+        "name": "",
+        "apikey": "",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 312.0000400543213,
+        "y": 1035.9998998641968,
+        "wires": [
+            [
+                "1ebcb482.dafddb"
+            ]
+        ]
+    },
+    {
+        "id": "d3e4bd43.87667",
+        "type": "link out",
+        "z": "9fd030c3.226e1",
+        "name": "Call Watson Default Classifier",
+        "links": [
+            "97db9926.7ec768"
+        ],
+        "x": 1227.0485763549805,
+        "y": 239.72226548194885,
+        "wires": []
+    },
+    {
+        "id": "97db9926.7ec768",
+        "type": "link in",
+        "z": "9fd030c3.226e1",
+        "name": "Run Watson Default Classifier",
+        "links": [
+            "d3e4bd43.87667"
+        ],
+        "x": 83.05561447143555,
+        "y": 1037.868106842041,
+        "wires": [
+            [
+                "76dd2dd.69430d4"
+            ]
+        ]
+    },
+    {
+        "id": "8804fa13.dce138",
+        "type": "link out",
+        "z": "9fd030c3.226e1",
+        "name": "Call Watson Trained Classifier",
+        "links": [
+            "b3236524.7a2858"
+        ],
+        "x": 1227.0347957611084,
+        "y": 377.72222566604614,
+        "wires": []
+    },
+    {
+        "id": "b3236524.7a2858",
+        "type": "link in",
+        "z": "9fd030c3.226e1",
+        "name": "Run Watson Trained Classifier",
+        "links": [
+            "8804fa13.dce138"
+        ],
+        "x": 101.02784538269043,
+        "y": 833.8959279060364,
+        "wires": [
+            [
+                "5a18c0ac.84e2b"
+            ]
+        ]
+    },
+    {
+        "id": "5ea19ee2.e05be",
+        "type": "comment",
+        "z": "9fd030c3.226e1",
+        "name": "Display retrieved image",
+        "info": "",
+        "x": 128.03470993041992,
+        "y": 550.0207681655884,
+        "wires": []
+    },
+    {
+        "id": "56d4462e.50e008",
+        "type": "link out",
+        "z": "9fd030c3.226e1",
+        "name": "Call Display Image",
+        "links": [
+            "6bca844c.c77abc"
+        ],
+        "x": 1227.0486307144165,
+        "y": 111.71530771255493,
+        "wires": []
+    },
+    {
+        "id": "6bca844c.c77abc",
+        "type": "link in",
+        "z": "9fd030c3.226e1",
+        "name": "Run Display Image",
+        "links": [
+            "56d4462e.50e008"
+        ],
+        "x": 101.0555477142334,
+        "y": 633.8681416511536,
+        "wires": [
+            [
+                "98df058e.206528"
+            ]
+        ]
+    },
+    {
+        "id": "bebd411a.b5aac",
+        "type": "comment",
+        "z": "9fd030c3.226e1",
+        "name": "Dashboard Inputs",
+        "info": "",
+        "x": 126.03472900390625,
+        "y": 58.020822525024414,
+        "wires": []
+    },
+    {
+        "id": "fd4f748c.ba9298",
+        "type": "visual-recognition-v3",
+        "z": "9fd030c3.226e1",
+        "name": "Classify image",
+        "apikey": "",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 559.0486526489258,
+        "y": 842.3472537994385,
+        "wires": [
+            [
+                "f59ea31e.56f85"
+            ]
+        ]
+    },
+    {
+        "id": "6641a5d8.4f5e0c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Images To Analyse",
+        "tab": "8fe4cf52.d0eb",
+        "order": 1,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "3950bec4.70c7b2",
+        "type": "ui_group",
+        "z": "",
+        "name": "Watson Trained VR Score",
+        "tab": "8fe4cf52.d0eb",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "6eb49753.5d3848",
+        "type": "os-config",
+        "z": "",
+        "cfgtype": "api",
+        "region": "dallas",
+        "projectId": "65a23ac47e39476994ef485a2eb516d5",
+        "userId": "aec3381187ef438fb59dc6c565f1a8e7",
+        "userName": "admin_d6b014be689b023d9c3e7d79a223b35b79475a18",
+        "password": "iTk.4U{,0N9ZS6_R",
+        "name": "MyOS"
+    },
+    {
+        "id": "421b6c23.f94184",
+        "type": "ui_group",
+        "z": "",
+        "name": "Watson Default Classifier",
+        "tab": "8fe4cf52.d0eb",
+        "order": 3,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "8fe4cf52.d0eb",
+        "type": "ui_tab",
+        "z": "9fd030c3.226e1",
+        "name": "Insurance VR Demo",
+        "icon": "dashboard",
+        "order": 1
+    }
+]

@@ -1,0 +1,242 @@
+[
+   {
+      "id":"68829fb.936386",
+      "type":"telegram command",
+      "z":"368159ea.4fa426",
+      "name":"",
+      "command":"/gdpr",
+      "bot":"5bdd8f89.683d",
+      "x":112,
+      "y":1102,
+      "wires":[
+         [
+            "bd0620cc.55e53",
+            "fe36b2c1.9239f"
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"f0954972.bf67d8",
+      "type":"telegram sender",
+      "z":"368159ea.4fa426",
+      "name":"",
+      "bot":"5bdd8f89.683d",
+      "x":1368,
+      "y":1080,
+      "wires":[
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"8d32a5e6.bf9298",
+      "type":"watson-discovery-v1",
+      "z":"368159ea.4fa426",
+      "name":"",
+      "environmentname":"",
+      "environment_id":"1ba26c01-0aed-43fe-801e-3972ccea3a22",
+      "collection_id":"8c9c65cb-9eed-4186-95b9-66a539ce7143",
+      "configurationname":"",
+      "configuration_id":"",
+      "collection_name":"",
+      "count":"3",
+      "passages":false,
+      "nlp_query":true,
+      "query":"",
+      "filter":"",
+      "aggregation":"",
+      "return":"",
+      "description":"",
+      "size":0,
+      "discovery-method":"query",
+      "x":538,
+      "y":1154,
+      "wires":[
+         [
+            "70a1b5f2.7e830c"
+         ]
+      ]
+   },
+   {
+      "id":"9b20f443.0f8628",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Send Discovery Response",
+      "func":"var question = msg.search_results.results[0].Question;\nvar answer = msg.search_results.results[0].Accepted_Answer;\n\nmsg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : \"I found this question that is similar to yours: \" + question\n    };\nnode.send(msg);\n\n// Use setTimeout function to ensure small delay in sending\n// 2nd message to ensure answer arrives after question.\n\nsetTimeout(function (){\n    msg.payload = {\n            chatId : msg.chatId,\n            type : \"message\",\n            content : \"And this is the answer: \" + answer\n        };\n    node.send(msg);\n    \n    return;\n}, 500); \n\n",
+      "outputs":1,
+      "noerr":0,
+      "x":1071.3334350585938,
+      "y":1194,
+      "wires":[
+         [
+            "f0954972.bf67d8"
+         ]
+      ]
+   },
+   {
+      "id":"bd0620cc.55e53",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Prepare for Discovery",
+      "func":"msg.chatId = msg.payload.chatId;\nmsg.discoveryparams = {};\nmsg.discoveryparams.query = msg.payload.content;\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":318,
+      "y":1194,
+      "wires":[
+         [
+            "8d32a5e6.bf9298"
+         ]
+      ]
+   },
+   {
+      "id":"6b439953.80a5f8",
+      "type":"comment",
+      "z":"368159ea.4fa426",
+      "name":"GDPR bot",
+      "info":"",
+      "x":117,
+      "y":962,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"fe36b2c1.9239f",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Prepare for Conversation",
+      "func":"msg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":324,
+      "y":994,
+      "wires":[
+         [
+            "ce647b60.16c3a8"
+         ]
+      ]
+   },
+   {
+      "id":"ce647b60.16c3a8",
+      "type":"watson-conversation-v1",
+      "z":"368159ea.4fa426",
+      "name":"Conversation",
+      "workspaceid":"cc819505-aa26-4bed-a928-6c0eee95ddc0",
+      "multiuser":false,
+      "context":true,
+      "default-endpoint":true,
+      "service-endpoint":"https://gateway.watsonplatform.net/conversation/api",
+      "x":546,
+      "y":1016,
+      "wires":[
+         [
+            "d547596d.031d68"
+         ]
+      ]
+   },
+   {
+      "id":"f3913dc5.655da",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Send Conversation Response",
+      "func":"var output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : output[t]\n    };\n    node.send(msg);\n}\nreturn;\n",
+      "outputs":1,
+      "noerr":0,
+      "x":1066.0477905273438,
+      "y":966,
+      "wires":[
+         [
+            "f0954972.bf67d8"
+         ]
+      ]
+   },
+   {
+      "id":"cb0a10df.68d82",
+      "type":"switch",
+      "z":"368159ea.4fa426",
+      "name":"",
+      "property":"payload.sendConversation",
+      "propertyType":"msg",
+      "rules":[
+         {
+            "t":"true"
+         },
+         {
+            "t":"false"
+         }
+      ],
+      "checkall":"true",
+      "outputs":2,
+      "x":1052,
+      "y":1078,
+      "wires":[
+         [
+            "f3913dc5.655da"
+         ],
+         [
+            "9b20f443.0f8628"
+         ]
+      ]
+   },
+   {
+      "id":"5b1d6166.2e147",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Wait, Merge, Prioritise Results",
+      "func":"// Wait for messages from both Conversation and Discovery \n// to arrive.  msg.payload holds Conversation results,\n// msg.search_results holds Discovery results.  Save these\n// and chatId in context.\n\ncontext.data = context.data || {};\n\nswitch (msg.topic) {\n    case \"conversation\":\n        context.data.conversation = msg.payload;\n        context.data.chatId = msg.chatId;\n        msg = null;\n        break;\n    case \"discovery\":\n        context.data.discovery = msg.search_results;\n        context.data.chatId = msg.chatId;\n        msg = null;\n        break;\n    default:\n        msg = null;\n    \tbreak;\n}\n\n// When both messages have arrived, create new message with\n// Discovery and Conversation results, plus chatId\n\nif (context.data.conversation != null && context.data.discovery != null ) {\n\tmsg2 = {};\n\tmsg2.chatId = context.data.chatId;\n\tmsg2.search_results = context.data.discovery;\n    msg2.payload = context.data.conversation;\n    \n// Go with Conversation results if confidence score > 90% \n// else return best Discovery result\n\n    var threshold = 0.9;\n    if ((msg2.payload.intents.length === 0 ||\n         msg2.payload.intents[0].confidence < threshold) &&\n         msg2.search_results.results.length > 0) {\n                msg2.payload.sendConversation = false;\n                } \n    else {\n        msg2.payload.sendConversation = true;\n        }\n    \n    context.data = null;\n\treturn msg2;\n} \nelse return null;\n",
+      "outputs":1,
+      "noerr":0,
+      "x":813.1902465820312,
+      "y":1079.2857666015625,
+      "wires":[
+         [
+            "cb0a10df.68d82"
+         ]
+      ]
+   },
+   {
+      "id":"d547596d.031d68",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Send Conversation result",
+      "func":"msg.topic = \"conversation\";\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":749.76171875,
+      "y":963.2857666015625,
+      "wires":[
+         [
+            "5b1d6166.2e147"
+         ]
+      ]
+   },
+   {
+      "id":"70a1b5f2.7e830c",
+      "type":"function",
+      "z":"368159ea.4fa426",
+      "name":"Send Discovery result",
+      "func":"msg.topic = \"discovery\";\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":735.0950317382812,
+      "y":1199.619140625,
+      "wires":[
+         [
+            "5b1d6166.2e147"
+         ]
+      ]
+   },
+   {
+      "id":"5bdd8f89.683d",
+      "type":"telegram bot",
+      "z":"",
+      "botname":"WilsonGWBot",
+      "usernames":"",
+      "chatids":""
+   }
+]
