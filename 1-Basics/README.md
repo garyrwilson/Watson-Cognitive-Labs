@@ -243,8 +243,7 @@ return msg;
 You can also train and further improve Watson Conversation using this feature - read more about it [here](https://console.bluemix.net/docs/services/conversation/logs.html#about-the-improve-component).
 
 ## Connecting Conversation with Slack
-**(1)** Login to Slack [here](https://ibm-fsa2017-eu.slack.com/apps/new/A0F7YS25R-bots) and choose a unique name for your bot.
-  - in general, you can create bot in any Slack team which you are a member of [here](https://my.slack.com/services/new/bot)
+**(1)** Login to Slack and choose a unique name for your bot. In general, you can create bot in any Slack team which you are a member of [here](https://my.slack.com/services/new/bot).
 
 ![](./images/slack-bot-1.jpg)
 
