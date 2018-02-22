@@ -1,32 +1,32 @@
 [
     {
-        "id": "30999947.506066",
+        "id": "39809217.72675e",
         "type": "slackbot-listen",
-        "z": "a564e440.d6ffb8",
-        "slackbot": "7a87901a.3dd39",
+        "z": "f0a05646.d0c078",
+        "slackbot": "34d196fe.63eb4a",
         "name": "",
-        "x": 115.71417999267578,
-        "y": 533.095232963562,
+        "x": 350,
+        "y": 960,
         "wires": [
             [
-                "f60c9e9f.db69f"
+                "12817bc8.437544"
             ]
         ]
     },
     {
-        "id": "7a764b1e.2a92a4",
+        "id": "2f91c065.ea4ce",
         "type": "slackbot-reply",
-        "z": "a564e440.d6ffb8",
-        "slackbot": "7a87901a.3dd39",
+        "z": "f0a05646.d0c078",
+        "slackbot": "34d196fe.63eb4a",
         "name": "",
-        "x": 1085.0474014282227,
-        "y": 531.9999861717224,
+        "x": 1319.3332214355469,
+        "y": 958.9047532081604,
         "wires": []
     },
     {
-        "id": "f60c9e9f.db69f",
+        "id": "12817bc8.437544",
         "type": "watson-conversation-v1",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "",
         "workspaceid": "114c4bbd-8167-4e05-b19f-01c698158a20",
         "multiuser": false,
@@ -34,34 +34,34 @@
         "empty-payload": false,
         "default-endpoint": true,
         "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
-        "x": 300.5951347351074,
-        "y": 501.61905908584595,
+        "x": 534.8809547424316,
+        "y": 928.5238261222839,
         "wires": [
             [
-                "3761ad54.238b52"
+                "849cd729.106628"
             ]
         ]
     },
     {
-        "id": "733bac7.2abb254",
+        "id": "cec255ce.818988",
         "type": "function",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "Postprocessing",
         "func": "// Reset context variables when New Contract conversation complete\nif (msg.payload.context.contractstatus == 'found') {\n    msg.payload.context.costpermonth = null;\n    msg.payload.context.datapermonth = null;\n    msg.payload.context.startdate = null;\n    msg.payload.context.contractstatus = null;\n}\nvar output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = output[t];\n    node.send(msg);\n}\nreturn;",
         "outputs": 1,
         "noerr": 0,
-        "x": 644.8808250427246,
-        "y": 504.4761862754822,
+        "x": 879.1666450500488,
+        "y": 931.3809533119202,
         "wires": [
             [
-                "7a764b1e.2a92a4"
+                "2f91c065.ea4ce"
             ]
         ]
     },
     {
-        "id": "3761ad54.238b52",
+        "id": "849cd729.106628",
         "type": "switch",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "",
         "property": "payload.context.action",
         "propertyType": "msg",
@@ -77,21 +77,21 @@
         ],
         "checkall": "true",
         "outputs": 2,
-        "x": 459.52364921569824,
-        "y": 463.33333444595337,
+        "x": 693.8094692230225,
+        "y": 890.2381014823914,
         "wires": [
             [
-                "a1651e8a.c0c65"
+                "1aef712f.b8d40f"
             ],
             [
-                "733bac7.2abb254"
+                "cec255ce.818988"
             ]
         ]
     },
     {
-        "id": "a1651e8a.c0c65",
+        "id": "1aef712f.b8d40f",
         "type": "change",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "Update Payload",
         "rules": [
             {
@@ -114,18 +114,18 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 638.0951194763184,
-        "y": 426.19048261642456,
+        "x": 872.3809394836426,
+        "y": 853.0952496528625,
         "wires": [
             [
-                "ffb68126.ece15"
+                "bb526140.7ea6b"
             ]
         ]
     },
     {
-        "id": "ffb68126.ece15",
+        "id": "bb526140.7ea6b",
         "type": "natural-language-understanding",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "NLU",
         "categories": false,
         "concepts": false,
@@ -150,51 +150,51 @@
         "maxsemantics": "50",
         "default-endpoint": true,
         "service-endpoint": "https://gateway.watsonplatform.net/natural-language-understanding/api",
-        "x": 823.333194732666,
-        "y": 390.47621059417725,
+        "x": 1057.6190147399902,
+        "y": 817.3809776306152,
         "wires": [
             [
-                "a578fe5e.c670d",
-                "6c06c1df.f4471"
+                "880c080c.8e6738",
+                "9259878a.2952b8"
             ]
         ]
     },
     {
-        "id": "a578fe5e.c670d",
+        "id": "880c080c.8e6738",
         "type": "function",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "Build Review Message",
         "func": "// Retrieve NLU score for review\nvar score = msg.features.sentiment.document.score;\n \n// Build part one of response containing sentiment score\nif (score >= 0) {\n    var sentiment = \"positive\";\n}\nelse {\n    var sentiment = \"negative\";\n}\nabsScore = Math.abs(score);\nvar outputA = \"Watson calculates your \" + msg.brand + \" review to be \" + Math.round(absScore * 100) + \"% \"+ sentiment + \". \";\n \n// Build part two of response\nswitch (true) {\n  case score > 0.7:\n    var outputB = \"A big fan then, I see!\";\n    break;\n  case score > 0.2:\n    var outputB = \"I guess you think \" + msg.brand + \" phones are mostly OK.\";\n    break;\n  case score > -0.2:\n    var outputB = \"You sound pretty ambivalent about \" + msg.brand + \" products.\";\n    break;\n  case score > -0.7:\n    var outputB = \"OK so you definitely don't like \" + msg.brand + \" phones. Time for a change!\";\n    break;\n  default:\n    var outputB = \"Clearly not a fan, at all.\";\n}\n \n// Send consolidated message to Slack\nmsg.payload = outputA + outputB;\nnode.send(msg);\n \nreturn ;\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 1031.66650390625,
-        "y": 434.0476264953613,
+        "x": 1265.9523239135742,
+        "y": 860.9523935317993,
         "wires": [
             [
-                "7a764b1e.2a92a4"
+                "2f91c065.ea4ce"
             ]
         ]
     },
     {
-        "id": "6c06c1df.f4471",
+        "id": "9259878a.2952b8",
         "type": "function",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "Clear Conversation Context",
         "func": "msg.payload = \"hi\";\nmsg.params = {\n    context : {}\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 1053.333236694336,
-        "y": 351.66667890548706,
+        "x": 1287.6190567016602,
+        "y": 778.571445941925,
         "wires": [
             [
-                "14551fc.910afe"
+                "1fbd9e57.4aac32"
             ]
         ]
     },
     {
-        "id": "14551fc.910afe",
+        "id": "1fbd9e57.4aac32",
         "type": "delay",
-        "z": "a564e440.d6ffb8",
+        "z": "f0a05646.d0c078",
         "name": "",
         "pauseType": "delay",
         "timeout": "2",
@@ -206,19 +206,19 @@
         "randomLast": "5",
         "randomUnits": "seconds",
         "drop": false,
-        "x": 1027.1426391601562,
-        "y": 248.33334827423096,
+        "x": 1261.4284591674805,
+        "y": 675.238115310669,
         "wires": [
             [
-                "f60c9e9f.db69f"
+                "12817bc8.437544"
             ]
         ]
     },
     {
-        "id": "7a87901a.3dd39",
+        "id": "34d196fe.63eb4a",
         "type": "slackbot-controller",
         "z": "",
         "name": "stsa2018-gw",
-        "bot_token": "xoxb-296907854230-kNkjV8kb3mbE5pp31ISZA45r"
+        "bot_token": ""
     }
 ]
