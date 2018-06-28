@@ -1,0 +1,334 @@
+[
+    {
+        "id": "41c39f0.1d8d16",
+        "type": "http request",
+        "z": "ee33bc6c.eb75d",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 334.9454460144043,
+        "y": 286.88617038726807,
+        "wires": [
+            [
+                "b18fcb27.2d2968"
+            ]
+        ]
+    },
+    {
+        "id": "b18fcb27.2d2968",
+        "type": "html",
+        "z": "ee33bc6c.eb75d",
+        "name": "Copy Text from Webpage",
+        "property": "payload",
+        "outproperty": "payload",
+        "tag": "p",
+        "ret": "text",
+        "as": "multi",
+        "x": 497.8795051574707,
+        "y": 366.8806800842285,
+        "wires": [
+            [
+                "6a4c5f9e.bb68a"
+            ]
+        ]
+    },
+    {
+        "id": "6a4c5f9e.bb68a",
+        "type": "join",
+        "z": "ee33bc6c.eb75d",
+        "name": "Join Webpage Paragraphs",
+        "mode": "custom",
+        "build": "string",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "3",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 710.7367553710938,
+        "y": 288.2087154388428,
+        "wires": [
+            [
+                "e040cbd1.03ada8"
+            ]
+        ]
+    },
+    {
+        "id": "e040cbd1.03ada8",
+        "type": "natural-language-understanding",
+        "z": "ee33bc6c.eb75d",
+        "name": "",
+        "categories": false,
+        "concepts": false,
+        "maxconcepts": "8",
+        "doc-emotion": true,
+        "doc-emotion-target": "",
+        "doc-sentiment": true,
+        "doc-sentiment-target": "",
+        "entity": true,
+        "entity-emotion": true,
+        "entity-sentiment": true,
+        "maxentities": "50",
+        "keyword": false,
+        "keyword-emotion": false,
+        "keyword-sentiment": false,
+        "maxkeywords": "50",
+        "metadata": false,
+        "relation": false,
+        "semantic": false,
+        "semantic-entities": false,
+        "semantic-keywords": false,
+        "maxsemantics": "50",
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/natural-language-understanding/api",
+        "x": 905.02783203125,
+        "y": 211.27233600616455,
+        "wires": [
+            [
+                "512b0d4d.547bb4",
+                "6f23545f.ff72cc",
+                "90678c97.61342"
+            ]
+        ]
+    },
+    {
+        "id": "e5baec6a.4769e",
+        "type": "ui_text_input",
+        "z": "ee33bc6c.eb75d",
+        "name": "Source Text",
+        "label": "Copy text here",
+        "group": "beea44f3.1c7298",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 102.88504028320312,
+        "y": 212.8627347946167,
+        "wires": [
+            [
+                "e040cbd1.03ada8"
+            ]
+        ]
+    },
+    {
+        "id": "9e3ff687.ca3dd8",
+        "type": "ui_text_input",
+        "z": "ee33bc6c.eb75d",
+        "name": "Web address",
+        "label": "Copy URL address here",
+        "group": "beea44f3.1c7298",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 102.88504028320312,
+        "y": 288.5770606994629,
+        "wires": [
+            [
+                "6bcb5f95.68e82"
+            ]
+        ]
+    },
+    {
+        "id": "512b0d4d.547bb4",
+        "type": "ui_text",
+        "z": "ee33bc6c.eb75d",
+        "group": "beea44f3.1c7298",
+        "order": 3,
+        "width": "6",
+        "height": "7",
+        "name": "Text",
+        "label": "",
+        "format": "{{msg.payload | limitTo: 500}}.....",
+        "layout": "col-center",
+        "x": 1168.5993690490723,
+        "y": 160.00557470321655,
+        "wires": []
+    },
+    {
+        "id": "69b65888.845dc8",
+        "type": "ui_chart",
+        "z": "ee33bc6c.eb75d",
+        "name": "Emotion Tones Chart",
+        "group": "ec49203.249e5e",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Emotion Tones",
+        "chartType": "horizontalBar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 1497.170841217041,
+        "y": 251.43415355682373,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2ec8d1a1.ed925e",
+        "type": "ui_template",
+        "z": "ee33bc6c.eb75d",
+        "group": "d4f3881.b948078",
+        "name": "Entities Table",
+        "order": 0,
+        "width": "8",
+        "height": "9",
+        "format": "<div layout=”row” layout-align=”start center”>\n<span flex=\"45\"><b><i>Entity</i></b></span>\n<span flex=\"30\"><b><i>Type</i></b></span>\n<span flex=\"25\"><b><i>Score (%)</i></b></span>\n</div>\n<div layout=”row” layout-align=”start center” ng-repeat=\"x in msg.payload.entitylist\">\n     <span flex=\"45\"><i>{{x.name}}</i></span>\n     <span flex=\"30\">{{x.type}}</span>\n     <span flex=\"25\" style=\"color:red\">{{x.score}}</span>\n</div>\n<br>\n<i>Scores are X (Y), where: \n<br>X = Relevance, \n<br>Y = Entity Sentiment</i>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 1468.5993766784668,
+        "y": 355.7198829650879,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6bcb5f95.68e82",
+        "type": "change",
+        "z": "ee33bc6c.eb75d",
+        "name": "Set URL",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 206.44530487060547,
+        "y": 378.1975555419922,
+        "wires": [
+            [
+                "41c39f0.1d8d16"
+            ]
+        ]
+    },
+    {
+        "id": "6f23545f.ff72cc",
+        "type": "function",
+        "z": "ee33bc6c.eb75d",
+        "name": "Convert for Chart",
+        "func": "msg[0] = { payload: msg.features.emotion.document.emotion.sadness,\n           topic: \"sadness\" };\nmsg[1] = { payload: msg.features.emotion.document.emotion.joy,\n           topic: \"joy\" };\nmsg[2] = { payload: msg.features.emotion.document.emotion.fear,\n           topic: \"fear\" };  \nmsg[3] = { payload: msg.features.emotion.document.emotion.disgust,\n           topic: \"disgust\" };\nmsg[4] = { payload: msg.features.emotion.document.emotion.anger,\n           topic: \"anger\" };           \n           \nreturn [msg[0], msg[1], msg[2], msg[3], msg[4]];\n",
+        "outputs": 5,
+        "noerr": 0,
+        "x": 1203.5883674621582,
+        "y": 249.69866180419922,
+        "wires": [
+            [
+                "69b65888.845dc8"
+            ],
+            [
+                "69b65888.845dc8"
+            ],
+            [
+                "69b65888.845dc8"
+            ],
+            [
+                "69b65888.845dc8"
+            ],
+            [
+                "69b65888.845dc8"
+            ]
+        ]
+    },
+    {
+        "id": "90678c97.61342",
+        "type": "function",
+        "z": "ee33bc6c.eb75d",
+        "name": "Convert for Table",
+        "func": "// Create array entry for each entity found\n// Set maximum returned to be 20\n\nvar numEntities = 20;\nif (msg.features.entities.length < numEntities) {\n    numEntities = msg.features.entities.length;\n}\nvar entities = [];\nfor (i = 0; i < numEntities; i++) {\n    entities.push({name: msg.features.entities[i].text,\n                   score: (msg.features.entities[i].relevance * 100).toFixed(0) + \" (\" + (msg.features.entities[i].sentiment.score * 100).toFixed(0) + \")\",\n                   type: msg.features.entities[i].type.substring(0,10)\n                 })\n}\nmsg.payload = {\n    entitylist: entities,\n};\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1196.4396514892578,
+        "y": 355.4297466278076,
+        "wires": [
+            [
+                "2ec8d1a1.ed925e"
+            ]
+        ]
+    },
+    {
+        "id": "beea44f3.1c7298",
+        "type": "ui_group",
+        "z": "",
+        "name": "Text To Analyse",
+        "tab": "c948623.22450a",
+        "order": 1,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "ec49203.249e5e",
+        "type": "ui_group",
+        "z": "",
+        "name": "Sentiment & Emotion",
+        "tab": "c948623.22450a",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "d4f3881.b948078",
+        "type": "ui_group",
+        "z": "",
+        "name": "Entities",
+        "tab": "c948623.22450a",
+        "order": 3,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "c948623.22450a",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Cognitive Text Analyser",
+        "icon": "dashboard",
+        "order": 5
+    }
+]

@@ -1,0 +1,93 @@
+[
+    {
+        "id": "42c9aa14.21cf64",
+        "type": "ui_text_input",
+        "z": "ce14c9b8.eed758",
+        "name": "Web image",
+        "label": "Web address for image",
+        "group": "d67660d1.e0e3f",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 147,
+        "y": 392,
+        "wires": [
+            [
+                "81be145f.9533b8",
+                "adbb8d89.85f6d"
+            ]
+        ]
+    },
+    {
+        "id": "daf45436.6350a8",
+        "type": "ui_template",
+        "z": "ce14c9b8.eed758",
+        "group": "d67660d1.e0e3f",
+        "name": "Analysed Image",
+        "order": 0,
+        "width": "6",
+        "height": "6",
+        "format": "<img width=\"32\" height=\"32\" alt=\"image\" src=\"data:image/jpg;base64,{{msg.payload}}\"/>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 1080,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a51fe347.79e1f",
+        "type": "ui_template",
+        "z": "ce14c9b8.eed758",
+        "group": "2aa08b2a.06e9f4",
+        "name": "Classes Table",
+        "order": 0,
+        "width": "12",
+        "height": "7",
+        "format": "<div layout=”row” layout-align=”start center”>\n<span flex=\"35\"><b><i>Class</i></b></span>\n<span flex=\"20\"><b><i>Score (%)</i></b></span>\n<span flex=\"45\"><b><i>Type</i></b></span>\n</div>\n<div layout=”row” layout-align=”start center” ng-repeat=\"x in msg.payload.imagelist\">\n     <span flex=\"35\"><i>{{x.class}}</i></span>\n     <span flex=\"20\">{{x.score}}</span>\n     <span flex=\"45\" style=\"color:green\">{{x.type}}</span>\n</div>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 1080,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d67660d1.e0e3f",
+        "type": "ui_group",
+        "z": "",
+        "name": "Image Passed to Watson",
+        "tab": "dc5a1335.96ff1",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "2aa08b2a.06e9f4",
+        "type": "ui_group",
+        "z": "",
+        "name": "Classes Identified",
+        "tab": "dc5a1335.96ff1",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "dc5a1335.96ff1",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Visual Recognition",
+        "icon": "dashboard",
+        "order": 3
+    }
+]

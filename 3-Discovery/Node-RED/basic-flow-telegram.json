@@ -1,88 +1,93 @@
 [
     {
-        "id": "23f635be.0da1ea",
+        "id": "ce1d3957.60de48",
         "type": "watson-conversation-v1",
-        "z": "5a27850c.f0c4ec",
-        "name": "Conversation",
-        "workspaceid": "efca2e61-fda8-4d27-9ec7-750aa4405fd6",
+        "z": "cd0c0dbb.8e22d",
+        "name": "",
+        "workspaceid": "a86d5288-2509-48c9-8c5f-fe4343c018dc",
         "multiuser": false,
         "context": true,
+        "empty-payload": false,
         "default-endpoint": true,
         "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
-        "x": 572.0347290039062,
-        "y": 858.0208129882812,
+        "timeout": "",
+        "optout-learning": false,
+        "x": 769.6585083007812,
+        "y": 726.6840209960938,
         "wires": [
             [
-                "e812cb30.8f74c8"
+                "3691c815.72e3b8"
             ]
         ]
     },
     {
-        "id": "e50f9110.8f4e3",
+        "id": "b9ef323a.c1711",
         "type": "telegram command",
-        "z": "5a27850c.f0c4ec",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
-        "command": "/phone",
-        "bot": "5bdd8f89.683d",
-        "x": 148.03473663330078,
-        "y": 852.0208206176758,
+        "command": "",
+        "bot": "ff0866a9.38a078",
+        "x": 331.6356658935547,
+        "y": 721.255443572998,
         "wires": [
+            [],
             [
-                "8cd2535c.1cf09"
-            ],
-            []
+                "33a93436.545a7c"
+            ]
         ]
     },
     {
-        "id": "2459d6bb.eb40ca",
+        "id": "e6de0606.ecd428",
         "type": "telegram sender",
-        "z": "5a27850c.f0c4ec",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
-        "bot": "5bdd8f89.683d",
-        "x": 1082.0347595214844,
-        "y": 850.0208611488342,
+        "bot": "ff0866a9.38a078",
+        "x": 1253.9690246582031,
+        "y": 719.2554936408997,
         "wires": [
             []
         ]
     },
     {
-        "id": "e812cb30.8f74c8",
+        "id": "3691c815.72e3b8",
         "type": "function",
-        "z": "5a27850c.f0c4ec",
-        "name": "Send Conversation Response",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Send Assistant Response",
         "func": "var output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : output[t]\n    };\n    node.send(msg);\n}\nreturn;",
         "outputs": 1,
         "noerr": 0,
-        "x": 831.0347290039062,
-        "y": 798.0208129882811,
+        "x": 982.968994140625,
+        "y": 667.2554454803466,
         "wires": [
             [
-                "2459d6bb.eb40ca"
+                "e6de0606.ecd428"
             ]
         ]
     },
     {
-        "id": "8cd2535c.1cf09",
+        "id": "33a93436.545a7c",
         "type": "function",
-        "z": "5a27850c.f0c4ec",
-        "name": "Prepare for Conversation",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Prepare for Assistant",
         "func": "msg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 354.03472900390625,
-        "y": 796.0208129882812,
+        "x": 569.6585083007812,
+        "y": 666.6840209960938,
         "wires": [
             [
-                "23f635be.0da1ea"
+                "ce1d3957.60de48"
             ]
         ]
     },
     {
-        "id": "5bdd8f89.683d",
+        "id": "ff0866a9.38a078",
         "type": "telegram bot",
         "z": "",
-        "botname": "WilsonGWBot",
+        "botname": "PhoneAdviceBot",
         "usernames": "",
-        "chatids": ""
+        "chatids": "",
+        "baseapiurl": "",
+        "pollinterval": "300"
     }
 ]

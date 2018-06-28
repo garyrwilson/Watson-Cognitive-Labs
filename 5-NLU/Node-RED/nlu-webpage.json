@@ -1,0 +1,135 @@
+[
+    {
+        "id": "c807cf16.0e642",
+        "type": "inject",
+        "z": "ee33bc6c.eb75d",
+        "name": "Start",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 112.78522491455078,
+        "y": 287.0604000091553,
+        "wires": [
+            [
+                "41c39f0.1d8d16"
+            ]
+        ]
+    },
+    {
+        "id": "41c39f0.1d8d16",
+        "type": "http request",
+        "z": "ee33bc6c.eb75d",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "https://en.wikipedia.org/wiki/IBM",
+        "tls": "",
+        "x": 332.08829498291016,
+        "y": 288.3147602081299,
+        "wires": [
+            [
+                "b18fcb27.2d2968"
+            ]
+        ]
+    },
+    {
+        "id": "c731eb0e.74b6d8",
+        "type": "debug",
+        "z": "ee33bc6c.eb75d",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1152.1708183288574,
+        "y": 217.3270492553711,
+        "wires": []
+    },
+    {
+        "id": "b18fcb27.2d2968",
+        "type": "html",
+        "z": "ee33bc6c.eb75d",
+        "name": "Copy Text from Webpage",
+        "property": "payload",
+        "outproperty": "payload",
+        "tag": "p",
+        "ret": "text",
+        "as": "multi",
+        "x": 520.7366485595703,
+        "y": 368.3092393875122,
+        "wires": [
+            [
+                "6a4c5f9e.bb68a"
+            ]
+        ]
+    },
+    {
+        "id": "6a4c5f9e.bb68a",
+        "type": "join",
+        "z": "ee33bc6c.eb75d",
+        "name": "Join Webpage Paragraphs",
+        "mode": "custom",
+        "build": "string",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "3",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 742.1652565002441,
+        "y": 288.2087116241455,
+        "wires": [
+            [
+                "e040cbd1.03ada8"
+            ]
+        ]
+    },
+    {
+        "id": "e040cbd1.03ada8",
+        "type": "natural-language-understanding",
+        "z": "ee33bc6c.eb75d",
+        "name": "",
+        "categories": false,
+        "concepts": false,
+        "maxconcepts": "8",
+        "doc-emotion": true,
+        "doc-emotion-target": "",
+        "doc-sentiment": true,
+        "doc-sentiment-target": "",
+        "entity": true,
+        "entity-emotion": true,
+        "entity-sentiment": true,
+        "maxentities": "50",
+        "keyword": false,
+        "keyword-emotion": false,
+        "keyword-sentiment": false,
+        "maxkeywords": "50",
+        "metadata": false,
+        "relation": false,
+        "semantic": false,
+        "semantic-entities": false,
+        "semantic-keywords": false,
+        "maxsemantics": "50",
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/natural-language-understanding/api",
+        "x": 889.3136138916016,
+        "y": 215.55803680419922,
+        "wires": [
+            [
+                "c731eb0e.74b6d8"
+            ]
+        ]
+    }
+]

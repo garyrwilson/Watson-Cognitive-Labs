@@ -1,106 +1,109 @@
 [
     {
-        "id": "a1db9717.387648",
+        "id": "ce1d3957.60de48",
         "type": "watson-conversation-v1",
-        "z": "59b347a.a4798b8",
-        "name": "Conversation",
-        "workspaceid": "efca2e61-fda8-4d27-9ec7-750aa4405fd6",
+        "z": "cd0c0dbb.8e22d",
+        "name": "",
+        "workspaceid": "a86d5288-2509-48c9-8c5f-fe4343c018dc",
         "multiuser": false,
         "context": true,
+        "empty-payload": false,
         "default-endpoint": true,
         "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
-        "x": 545,
-        "y": 175.3333282470703,
+        "timeout": "",
+        "optout-learning": false,
+        "x": 756.3252487182617,
+        "y": 191.68409633636475,
         "wires": [
             [
-                "c11c95e3.dfb688"
+                "3691c815.72e3b8"
             ]
         ]
     },
     {
-        "id": "a999ceb5.d148c",
+        "id": "b9ef323a.c1711",
         "type": "telegram command",
-        "z": "59b347a.a4798b8",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
-        "command": "/phone",
-        "bot": "4b287f18.5ee8b",
-        "x": 121.00000762939453,
-        "y": 169.33333587646484,
+        "command": "",
+        "bot": "ff0866a9.38a078",
+        "x": 308.3023910522461,
+        "y": 214.5888547897339,
         "wires": [
+            [],
             [
-                "2e206471.e816cc"
-            ],
-            []
+                "1a699343.880ebd"
+            ]
         ]
     },
     {
-        "id": "9d5dcb13.258d38",
+        "id": "e6de0606.ecd428",
         "type": "telegram sender",
-        "z": "59b347a.a4798b8",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
-        "bot": "4b287f18.5ee8b",
-        "x": 1075.000099182129,
-        "y": 185.6667137145996,
+        "bot": "ff0866a9.38a078",
+        "x": 1245.6357498168945,
+        "y": 210.92223167419434,
         "wires": [
             []
         ]
     },
     {
-        "id": "c11c95e3.dfb688",
+        "id": "3691c815.72e3b8",
         "type": "function",
-        "z": "59b347a.a4798b8",
-        "name": "Send Conversation Response",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Send Assistant Response",
         "func": "var output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : output[t]\n    };\n    node.send(msg);\n}\nreturn;",
         "outputs": 1,
         "noerr": 0,
-        "x": 804,
-        "y": 115.3333282470702,
+        "x": 969.6357345581055,
+        "y": 132.25552082061756,
         "wires": [
             [
-                "9d5dcb13.258d38"
+                "e6de0606.ecd428"
             ]
         ]
     },
     {
-        "id": "89ce5338.8a702",
+        "id": "33a93436.545a7c",
         "type": "function",
-        "z": "59b347a.a4798b8",
-        "name": "Prepare for Conversation",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Prepare for Assistant",
         "func": "msg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 327,
-        "y": 113.33332824707031,
+        "x": 556.3252487182617,
+        "y": 131.68409633636475,
         "wires": [
             [
-                "a1db9717.387648"
+                "ce1d3957.60de48"
             ]
         ]
     },
     {
-        "id": "2e206471.e816cc",
+        "id": "1a699343.880ebd",
         "type": "function",
-        "z": "59b347a.a4798b8",
-        "name": "Prepare For Discovery",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Prepare for Discovery",
         "func": "msg.chatId = msg.payload.chatId;\nmsg.discoveryparams = {};\nmsg.discoveryparams.query = msg.payload.content;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 310.83335876464844,
-        "y": 299.99999046325684,
+        "x": 558.8426971435547,
+        "y": 321.50465202331543,
         "wires": [
             [
-                "2b902791.e77d48"
+                "7ea4125b.0b6fdc"
             ]
         ]
     },
     {
-        "id": "2b902791.e77d48",
+        "id": "7ea4125b.0b6fdc",
         "type": "watson-discovery-v1",
-        "z": "59b347a.a4798b8",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
         "environmentname": "",
-        "environment_id": "1ba26c01-0aed-43fe-801e-3972ccea3a22",
-        "collection_id": "83bf254d-edb5-4e8c-8984-37491bc36329",
+        "environment_id": "a55d2ba7-40cc-4220-a099-2ec78e47ffbc",
+        "collection_id": "209f6a85-c21c-4ba7-b4f0-f5e1a840593e",
         "configurationname": "",
         "configuration_id": "",
         "language_code": "en",
@@ -117,36 +120,38 @@
         "discovery-method": "query",
         "default-endpoint": true,
         "service-endpoint": "https://gateway.watsonplatform.net/discovery/api",
-        "x": 550.833381652832,
-        "y": 250.0000114440918,
+        "x": 754.6585845947266,
+        "y": 268.35069465637207,
         "wires": [
             [
-                "3e6afdff.b6ddf2"
+                "8cb674cf.aee2a8"
             ]
         ]
     },
     {
-        "id": "3e6afdff.b6ddf2",
+        "id": "8cb674cf.aee2a8",
         "type": "function",
-        "z": "59b347a.a4798b8",
+        "z": "cd0c0dbb.8e22d",
         "name": "Send Discovery Response",
-        "func": "var question = msg.search_results.results[0].Title;\nvar answer = msg.search_results.results[0].Accepted_Answer;\n \nmsg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : \"I found this question that is similar to yours: \" + question\n    };\nnode.send(msg);\n \n// Use setTimeout function to ensure small delay in sending\n// 2nd message to ensure answer arrives after question.\n \nsetTimeout(function (){\n    msg.payload = {\n            chatId : msg.chatId,\n            type : \"message\",\n            content : \"And this is the answer: \" + answer\n        };\n    node.send(msg);\n \n    return;\n}, 500);\n",
+        "func": "var results = msg.search_results.matching_results;\nif (results > 0) {\n    var question = msg.search_results.results[0].Title;\n    var answer = msg.search_results.results[0].Accepted_Answer;\n     \n    msg.payload = {\n            chatId : msg.chatId,\n            type : \"message\",\n            content : \"I found this question that is similar to yours: \" + question\n        };\n    node.send(msg);\n     \n    // Use setTimeout function to ensure small delay in sending\n    // 2nd message to ensure answer arrives after question.\n     \n    setTimeout(function (){\n        msg.payload = {\n                chatId : msg.chatId,\n                type : \"message\",\n                content : \"And this is the answer: \" + answer\n            };\n        node.send(msg);\n    }, 500);\n} else {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : \"Sorry, I couldn't find anything to help. Maybe you could try rephrasing your question?\"\n    };\n    node.send(msg);\n    return;\n}\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 819.9999771118164,
-        "y": 301.6666488647461,
+        "x": 987.9918975830078,
+        "y": 313.35069465637207,
         "wires": [
             [
-                "9d5dcb13.258d38"
+                "e6de0606.ecd428"
             ]
         ]
     },
     {
-        "id": "4b287f18.5ee8b",
+        "id": "ff0866a9.38a078",
         "type": "telegram bot",
         "z": "",
-        "botname": "WilsonGWBot",
+        "botname": "PhoneAdviceBot",
         "usernames": "",
-        "chatids": ""
+        "chatids": "",
+        "baseapiurl": "",
+        "pollinterval": "300"
     }
 ]

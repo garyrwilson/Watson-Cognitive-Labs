@@ -1,107 +1,180 @@
 [
     {
-        "id": "1839eba2.cd03f4",
-        "type": "watson-conversation-v1",
-        "z": "aacd54f2.c13278",
-        "name": "Conversation",
-        "workspaceid": "efca2e61-fda8-4d27-9ec7-750aa4405fd6",
-        "multiuser": false,
-        "context": true,
-        "default-endpoint": true,
-        "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
-        "x": 523.3333435058594,
-        "y": 166.99998474121094,
+        "id": "b77e7ae6.9d3a48",
+        "type": "function",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Send Reset to Assistant",
+        "func": "msg.payload = \"gotohelp\";\nmsg.params = {\n    context : {}\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1439.9999313354492,
+        "y": 809.6470365524292,
         "wires": [
             [
-                "d705d3ce.f47ae"
+                "a44c1c.0b6423e8"
             ]
         ]
     },
     {
-        "id": "86c82250.0052e",
-        "type": "telegram command",
-        "z": "aacd54f2.c13278",
+        "id": "a44c1c.0b6423e8",
+        "type": "delay",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
-        "command": "/phone",
-        "bot": "4b287f18.5ee8b",
-        "x": 76.3333511352539,
-        "y": 197,
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1660.6668968200684,
+        "y": 808.9802875518799,
         "wires": [
             [
-                "53c584df.a430fc",
-                "8e7e4eac.02bf3"
-            ],
-            []
+                "c61b11b7.ad3a7"
+            ]
         ]
     },
     {
-        "id": "6d97f5fe.6e2c3c",
-        "type": "telegram sender",
-        "z": "aacd54f2.c13278",
+        "id": "e08df8d7.c79d68",
+        "type": "telegram command",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
-        "bot": "4b287f18.5ee8b",
-        "x": 1516.33349609375,
-        "y": 184.66671752929688,
+        "command": "",
+        "bot": "ff0866a9.38a078",
+        "x": 151.66667556762695,
+        "y": 597.3309936523438,
         "wires": [
-            []
+            [],
+            [
+                "81a92d45.d4151"
+            ]
         ]
     },
     {
-        "id": "2ae4c085.95e0b",
+        "id": "81a92d45.d4151",
         "type": "function",
-        "z": "aacd54f2.c13278",
-        "name": "Send Conversation Response",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Prepare for Assistant",
+        "func": "// Save user input for Discovery if needed\nflow.set('userInput',msg.payload.content);\n\n// Pass to Watson Assistant\nmsg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 368.3624267578125,
+        "y": 467.3484306335449,
+        "wires": [
+            [
+                "c61b11b7.ad3a7"
+            ]
+        ]
+    },
+    {
+        "id": "c61b11b7.ad3a7",
+        "type": "watson-conversation-v1",
+        "z": "cd0c0dbb.8e22d",
+        "name": "",
+        "workspaceid": "a86d5288-2509-48c9-8c5f-fe4343c018dc",
+        "multiuser": false,
+        "context": true,
+        "empty-payload": false,
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
+        "timeout": "",
+        "optout-learning": false,
+        "x": 565.0290412902832,
+        "y": 515.6817712783813,
+        "wires": [
+            [
+                "12a550a6.b191af",
+                "17828a01.ecf666"
+            ]
+        ]
+    },
+    {
+        "id": "8cbf9e5a.9c2c8",
+        "type": "switch",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Test Intent Confidence Level",
+        "property": "payload.intents[0].confidence",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "0.8",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 840.8566932678223,
+        "y": 566.827675819397,
+        "wires": [
+            [
+                "1e1d111c.adea0f"
+            ],
+            [
+                "e38afe8d.dc8b8"
+            ]
+        ]
+    },
+    {
+        "id": "1e1d111c.adea0f",
+        "type": "function",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Send Assistant Response",
         "func": "var output = msg.payload.output.text;\nfor (var t in output) {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : output[t]\n    };\n    node.send(msg);\n}\nreturn;",
         "outputs": 1,
         "noerr": 0,
-        "x": 1261.3333740234375,
-        "y": 94.33332824707031,
+        "x": 1118.3625526428223,
+        "y": 470.68166971206665,
         "wires": [
             [
-                "6d97f5fe.6e2c3c"
+                "b8bee73b.8d5428"
             ]
         ]
     },
     {
-        "id": "8e7e4eac.02bf3",
+        "id": "b8bee73b.8d5428",
+        "type": "telegram sender",
+        "z": "cd0c0dbb.8e22d",
+        "name": "",
+        "bot": "ff0866a9.38a078",
+        "x": 1658.7329368591309,
+        "y": 600.6817479133606,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e38afe8d.dc8b8",
         "type": "function",
-        "z": "aacd54f2.c13278",
-        "name": "Prepare for Conversation",
-        "func": "msg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\nreturn msg;",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Prepare for Discovery",
+        "func": "// Get user input to pass to Discovery\nmsg.discoveryparams = {};\nmsg.discoveryparams.query = flow.get('userInput');\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 305.3333435058594,
-        "y": 104.99998474121094,
+        "x": 1102.992015838623,
+        "y": 747.3483276367188,
         "wires": [
             [
-                "1839eba2.cd03f4"
+                "e61ccc81.b8edb"
             ]
         ]
     },
     {
-        "id": "53c584df.a430fc",
-        "type": "function",
-        "z": "aacd54f2.c13278",
-        "name": "Prepare For Discovery",
-        "func": "msg.chatId = msg.payload.chatId;\nmsg.discoveryparams = {};\nmsg.discoveryparams.query = msg.payload.content;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 289.1667022705078,
-        "y": 291.66664695739746,
-        "wires": [
-            [
-                "954ccdec.2a6dc"
-            ]
-        ]
-    },
-    {
-        "id": "954ccdec.2a6dc",
+        "id": "e61ccc81.b8edb",
         "type": "watson-discovery-v1",
-        "z": "aacd54f2.c13278",
+        "z": "cd0c0dbb.8e22d",
         "name": "",
         "environmentname": "",
-        "environment_id": "1ba26c01-0aed-43fe-801e-3972ccea3a22",
-        "collection_id": "83bf254d-edb5-4e8c-8984-37491bc36329",
+        "environment_id": "a55d2ba7-40cc-4220-a099-2ec78e47ffbc",
+        "collection_id": "209f6a85-c21c-4ba7-b4f0-f5e1a840593e",
         "configurationname": "",
         "configuration_id": "",
         "language_code": "en",
@@ -118,112 +191,84 @@
         "discovery-method": "query",
         "default-endpoint": true,
         "service-endpoint": "https://gateway.watsonplatform.net/discovery/api",
-        "x": 529.1667251586914,
-        "y": 241.66666793823242,
+        "x": 1269.6586799621582,
+        "y": 680.6817426681519,
         "wires": [
             [
-                "4bb16e5e.abbfb"
+                "c8f9ce70.3e68",
+                "b77e7ae6.9d3a48"
             ]
         ]
     },
     {
-        "id": "b451a8f8.3ef188",
+        "id": "c8f9ce70.3e68",
         "type": "function",
-        "z": "aacd54f2.c13278",
+        "z": "cd0c0dbb.8e22d",
         "name": "Send Discovery Response",
-        "func": "var question = msg.search_results.results[0].Title;\nvar answer = msg.search_results.results[0].Accepted_Answer;\n \nmsg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : \"I found this question that is similar to yours: \" + question\n    };\nnode.send(msg);\n \n// Use setTimeout function to ensure small delay in sending\n// 2nd message to ensure answer arrives after question.\n \nsetTimeout(function (){\n    msg.payload = {\n            chatId : msg.chatId,\n            type : \"message\",\n            content : \"And this is the answer: \" + answer\n        };\n    node.send(msg);\n \n    return;\n}, 500);\n",
+        "func": "var results = msg.search_results.matching_results;\nif (results > 0) {\n    var question = msg.search_results.results[0].Title;\n    var answer = msg.search_results.results[0].Accepted_Answer;\n     \n    msg.payload = {\n            chatId : msg.chatId,\n            type : \"message\",\n            content : \"I found this question that is similar to yours: \" + question\n        };\n    node.send(msg);\n     \n    // Use setTimeout function to ensure small delay in sending\n    // 2nd message to ensure answer arrives after question.\n     \n    setTimeout(function (){\n        msg.payload = {\n                chatId : msg.chatId,\n                type : \"message\",\n                content : \"And this is the answer: \" + answer\n            };\n        node.send(msg);\n    }, 500);\n} else {\n    msg.payload = {\n        chatId : msg.chatId,\n        type : \"message\",\n        content : \"Sorry, I couldn't find anything to help. Maybe you could try rephrasing your question?\"\n    };\n    node.send(msg);\n    return;\n}\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 1263.3333740234375,
-        "y": 300.6666564941406,
+        "x": 1481.3254585266113,
+        "y": 742.3483686447144,
         "wires": [
             [
-                "6d97f5fe.6e2c3c"
+                "b8bee73b.8d5428"
             ]
         ]
     },
     {
-        "id": "d705d3ce.f47ae",
-        "type": "function",
-        "z": "aacd54f2.c13278",
-        "name": "Send Conversation Result",
-        "func": "msg.topic = \"conversation\";\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 738,
-        "y": 98,
-        "wires": [
-            [
-                "dde6728.927cc9"
-            ]
-        ]
-    },
-    {
-        "id": "4bb16e5e.abbfb",
-        "type": "function",
-        "z": "aacd54f2.c13278",
-        "name": "Send Discovery Result",
-        "func": "msg.topic = \"discovery\";\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 736,
-        "y": 308,
-        "wires": [
-            [
-                "dde6728.927cc9"
-            ]
-        ]
-    },
-    {
-        "id": "dde6728.927cc9",
-        "type": "function",
-        "z": "aacd54f2.c13278",
-        "name": "Wait, Merge, Prioritise Results",
-        "func": "// Wait for messages from both Conversation and Discovery\n// to arrive.  msg.payload holds Conversation results,\n// msg.search_results holds Discovery results.  Save these\n// and chatId in context.\n\ncontext.data = context.data || {};\n\nswitch (msg.topic) {\n    case \"conversation\":\n        context.data.conversation = msg.payload;\n        context.data.chatId = msg.chatId;\n        msg = null;\n        break;\n    case \"discovery\":\n        context.data.discovery = msg.search_results;\n        context.data.chatId = msg.chatId;\n        msg = null;\n        break;\n    default:\n        msg = null;\n    \tbreak;\n}\n\n// When both messages have arrived, create new message with\n// Discovery and Conversation results, plus chatId\n\nif (context.data.conversation != null && context.data.discovery != null ) {\n\tmsg2 = {};\n\tmsg2.chatId = context.data.chatId;\n\tmsg2.search_results = context.data.discovery;\n    msg2.payload = context.data.conversation;\n\n// Go with Conversation result if intent confidence score > 80%\n// else return best Discovery result\n\n    var threshold = 0.8;\n    if ((msg2.payload.intents.length === 0 ||\n         msg2.payload.intents[0].confidence < threshold) &&\n         msg2.search_results.results.length > 0) {\n                msg2.payload.sendConversation = false;\n                }\n    else {\n        msg2.payload.sendConversation = true;\n        }\n\n    context.data = null;\n\treturn msg2;\n}\nelse return null;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 880,
-        "y": 198,
-        "wires": [
-            [
-                "c081ff2c.95dcb"
-            ]
-        ]
-    },
-    {
-        "id": "c081ff2c.95dcb",
+        "id": "12a550a6.b191af",
         "type": "switch",
-        "z": "aacd54f2.c13278",
-        "name": "",
-        "property": "payload.sendConversation",
+        "z": "cd0c0dbb.8e22d",
+        "name": "Test for Found Intent",
+        "property": "payload.output.nodes_visited[0]",
         "propertyType": "msg",
         "rules": [
             {
-                "t": "true"
+                "t": "neq",
+                "v": "Anything else",
+                "vt": "str"
             },
             {
-                "t": "false"
+                "t": "else"
             }
         ],
         "checkall": "true",
+        "repair": false,
         "outputs": 2,
-        "x": 1107,
-        "y": 196,
+        "x": 674.6586875915527,
+        "y": 644.0150289535522,
         "wires": [
             [
-                "2ae4c085.95e0b"
+                "8cbf9e5a.9c2c8"
             ],
             [
-                "b451a8f8.3ef188"
+                "e38afe8d.dc8b8"
             ]
         ]
     },
     {
-        "id": "4b287f18.5ee8b",
+        "id": "17828a01.ecf666",
+        "type": "debug",
+        "z": "cd0c0dbb.8e22d",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 790.4918797810872,
+        "y": 734.2766443888345,
+        "wires": []
+    },
+    {
+        "id": "ff0866a9.38a078",
         "type": "telegram bot",
         "z": "",
-        "botname": "WilsonGWBot",
+        "botname": "PhoneAdviceBot",
         "usernames": "",
-        "chatids": ""
+        "chatids": "",
+        "baseapiurl": "",
+        "pollinterval": "300"
     }
 ]

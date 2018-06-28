@@ -1,0 +1,158 @@
+[
+    {
+        "id": "dc9d3b44.cdb3a8",
+        "type": "ui_text",
+        "z": "ee33bc6c.eb75d",
+        "group": "4d5e07d2.e3df58",
+        "order": 3,
+        "width": "6",
+        "height": "7",
+        "name": "Text",
+        "label": "",
+        "format": "{{msg.payload | limitTo: 500}}.....",
+        "layout": "col-center",
+        "x": 1155.7422332763672,
+        "y": 320.0055842399597,
+        "wires": []
+    },
+    {
+        "id": "2a187ad.aa5db86",
+        "type": "ui_text_input",
+        "z": "ee33bc6c.eb75d",
+        "name": "Source Text",
+        "label": "Copy text here",
+        "group": "4d5e07d2.e3df58",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 107.17076110839844,
+        "y": 144.2913055419922,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "83ebbf19.9913f",
+        "type": "ui_text_input",
+        "z": "ee33bc6c.eb75d",
+        "name": "Web address",
+        "label": "Copy URL address here",
+        "group": "4d5e07d2.e3df58",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 107.17076110839844,
+        "y": 285.71991300582886,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9e88e56d.1209c8",
+        "type": "ui_chart",
+        "z": "ee33bc6c.eb75d",
+        "name": "Emotion Tones Chart",
+        "group": "4d50955c.d8855c",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Emotion Tones",
+        "chartType": "horizontalBar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 1520.0279846191406,
+        "y": 418.57702016830444,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "fea8367d.0650b8",
+        "type": "ui_template",
+        "z": "ee33bc6c.eb75d",
+        "group": "30d16fdf.4d3c1",
+        "name": "Entities Table",
+        "order": 0,
+        "width": "8",
+        "height": "9",
+        "format": "<div layout=”row” layout-align=”start center”>\n<span flex=\"45\"><b><i>Entity</i></b></span>\n<span flex=\"30\"><b><i>Type</i></b></span>\n<span flex=\"25\"><b><i>Score (%)</i></b></span>\n</div>\n<div layout=”row” layout-align=”start center” ng-repeat=\"x in msg.payload.entitylist\">\n     <span flex=\"45\"><i>{{x.name}}</i></span>\n     <span flex=\"30\">{{x.type}}</span>\n     <span flex=\"25\" style=\"color:red\">{{x.score}}</span>\n</div>\n<br>\n<i>Scores are X (Y), where: \n<br>X = Relevance, \n<br>Y = Entity Sentiment</i>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 1491.4565200805664,
+        "y": 522.8627495765686,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4d5e07d2.e3df58",
+        "type": "ui_group",
+        "z": "",
+        "name": "Text To Analyse",
+        "tab": "85ad139.fcf59f",
+        "order": 1,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "4d50955c.d8855c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Sentiment & Emotion",
+        "tab": "85ad139.fcf59f",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "30d16fdf.4d3c1",
+        "type": "ui_group",
+        "z": "",
+        "name": "Entities",
+        "tab": "85ad139.fcf59f",
+        "order": 3,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "85ad139.fcf59f",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Cognitive Text Analyser",
+        "icon": "dashboard",
+        "order": 5
+    }
+]

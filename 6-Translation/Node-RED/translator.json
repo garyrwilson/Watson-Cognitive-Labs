@@ -1,0 +1,122 @@
+[
+    {
+        "id": "d3f4c5ba.300ec8",
+        "type": "twitter in",
+        "z": "46274cd9.feb464",
+        "twitter": "",
+        "tags": "#xAR,#xDE,#xES,#xIT,#xFR,#xPT,#xRU,#xZH",
+        "user": "false",
+        "name": "",
+        "topic": "tweets",
+        "inputs": 0,
+        "x": 170.73660714285714,
+        "y": 249.4475446428571,
+        "wires": [
+            [
+                "b030f7da.0512c8"
+            ]
+        ]
+    },
+    {
+        "id": "b030f7da.0512c8",
+        "type": "switch",
+        "z": "46274cd9.feb464",
+        "name": "Only Select My Tweets",
+        "property": "tweet.user.screen_name",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "garyrwilson",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 389.31359100341797,
+        "y": 307.63953590393066,
+        "wires": [
+            [
+                "d897a75a.849058"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "4eadd25a.85fe3c",
+        "type": "debug",
+        "z": "46274cd9.feb464",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1162.1706886291504,
+        "y": 258.1138496398926,
+        "wires": []
+    },
+    {
+        "id": "d897a75a.849058",
+        "type": "function",
+        "z": "46274cd9.feb464",
+        "name": "Find Language & Strip Hashtags",
+        "func": "var str = msg.payload;\n\nswitch (true)\n{\n   case str.includes(\"xAR\"):\n       msg.destlang = \"ar\";\n       str = str.replace(\" #xAR\", \"\");\n       break; \n   case str.includes(\"xDE\"):\n       msg.destlang = \"de\";\n       str = str.replace(\" #xDE\", \"\");\n       break; \n   case str.includes(\"xFR\"):\n       msg.destlang = \"fr\";\n       str = str.replace(\" #xFR\", \"\");\n       break;\n   case str.includes(\"xIT\"):\n       msg.destlang = \"it\";\n       str = str.replace(\" #xIT\", \"\");\n       break;\n   case str.includes(\"xPT\"):\n       msg.destlang = \"pt\";\n       str = str.replace(\" #xPT\", \"\");\n       break;\n   case str.includes(\"xRU\"):\n       msg.destlang = \"ru\";\n       str = str.replace(\" #xRU\", \"\");\n       break;\n   case str.includes(\"xZH\"):\n       msg.destlang = \"zh\";\n       str = str.replace(\" #xZH\", \"\");\n       break;\n   default: \n       msg.destlang = \"es\";\n       str = str.replace(\" #xES\", \"\");\n}\n\nmsg.payload = str;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 672.8851013183594,
+        "y": 251.43416595458984,
+        "wires": [
+            [
+                "f6bb6777.e75488"
+            ]
+        ]
+    },
+    {
+        "id": "f6bb6777.e75488",
+        "type": "watson-translator",
+        "z": "46274cd9.feb464",
+        "name": "",
+        "action": "translate",
+        "basemodel": "en-tr",
+        "domain": "general",
+        "srclang": "en",
+        "destlang": "tr",
+        "password": "",
+        "apikey": "",
+        "custom": "",
+        "domainhidden": "general",
+        "srclanghidden": "en",
+        "destlanghidden": "tr",
+        "basemodelhidden": "en-tr",
+        "customhidden": "",
+        "filetype": "forcedglossary",
+        "trainid": "",
+        "lgparams2": true,
+        "neural": false,
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/language-translator/api",
+        "x": 950.7366638183594,
+        "y": 309.3136205673218,
+        "wires": [
+            [
+                "4eadd25a.85fe3c",
+                "a5667213.77b47"
+            ]
+        ]
+    },
+    {
+        "id": "a5667213.77b47",
+        "type": "twitter out",
+        "z": "46274cd9.feb464",
+        "twitter": "",
+        "name": "Tweet",
+        "x": 1165.016746520996,
+        "y": 375.3292541503906,
+        "wires": []
+    }
+]
