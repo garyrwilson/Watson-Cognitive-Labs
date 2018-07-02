@@ -70,7 +70,7 @@ In this section we are going to setup the Discovery service, create a custom col
 
 `Connect` this new service to your existing Node-RED application - use the same method you used when connecting the Watson Assistant and NLU services - and `restage` it when asked.
 
-**(2)** Launch the Discovery tool from your newly created service and once in the application, `Create a data collection`.
+**(2)** Launch the Discovery tool from your newly created service. You may see a `Welcome` message or two ... if so click the appropriate buttons to dismiss them, and once in the application, select `Upload your own data`.
 
 ![](./images/discovery-launch-0.jpg)
 
@@ -110,7 +110,9 @@ In this section we are going to setup the Discovery service, create a custom col
 
 ![](./images/discovery-2a.jpg)
 
-- Drag and drop or browse and select **all** of the JSON documents from the previously extracted dataset. Watson Discovery will start to upload and process all of the files ... it will take a few minutes! You will see the `Document` count increase and the `General Sentiment` values change as Watson Discovery processes each of the files.
+- Drag and drop or browse and select the JSON documents from the previously extracted dataset. There are 999 in total, and as there are limits to how documents you can add in a single transaction when you are using a Lite plan, **we suggest you upload in batches of 100-200 documents at a time**.
+
+- Watson Discovery will start to upload and process the files as you add them ... it will take a few minutes! You will see the `Document` count increase and the `General Sentiment` values change as Watson Discovery processes each of the files.
 
   ![](./images/discovery-add-collection.jpg)
 
@@ -118,7 +120,7 @@ In this section we are going to setup the Discovery service, create a custom col
 
   ![ids](./images/discovery-ids.jpg)
 
-**(12)** Let the `Document count` field get to about 100 before you do anything else. Whilst uploading and processing is ongoing, we can query the collection built so far by clicking on the `Build Query` icon ![](./images/discovery-query-icon.jpg) on the left side of the screen.
+**(12)** When you've added all of the documents, you can query the collection even whilst uploading and processing is still ongoing, by clicking on the `Build Query` icon ![](./images/discovery-query-icon.jpg) on the left side of the screen.
 
 **(13)** If you select the `Run query` icon at the bottom of the screen you will see a selection of the documents in the collection that have been uploaded so far. Select the curly brackets next to one of the `enriched_Accepted_Answer` fields to see the sentiment score Watson Discovery has applied to the document.
 
@@ -275,7 +277,7 @@ Here - having arrived at this point because Watson Assistant couldn't provide us
 
 If you remember, in our Watson Assistant dialog flow, we have a `Help` dialog node, which we `Jump to` within Watson Assistant whenever we've completed a dialog conversation, to get the _"Can I help you..."_ message. There's currently no `intent` for this, but if we create one, add it to the `Help` dialog node, and forcibly call it from our Node-RED flow, we can achieve the same result.
 
-Launch your Watson Assistant instance, and add a basic `#help` intent that just has a single example of `gotohelp`, then add the `#help` intent to the `Help` dialog flow. Make sure you're using the `Watson Advisor 1.0` workspace!
+Launch your Watson Assistant instance, and add a basic `#help` intent that just has a single example of `gotohelp`, then add the `#help` intent to the `Help` dialog flow. Make sure you're using the `Phone Advisor 1.0` workspace!
 
 ![](./images/assistant-help-intent.jpg)
 

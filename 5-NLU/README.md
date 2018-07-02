@@ -41,7 +41,7 @@ When you hit the `Inject` button, the flow retrieves the entire webpage, which i
 
 ![](./images/nlu-4.jpg)
 
-**(3)** We want this data to be fed through the NLU service as one message, so we want to merge all of these messages into one. We can do this with a `Join` node - drop one of these in now. Change its properties to `Mode` **manual** and then enter **3** in the `After a timeout following the first message` field. The messages will arrive at this node in quick succession, so setting the timeout field ensures we keep collecting and joining the messages until a 3 second delay suggests they have stopped arriving.
+**(3)** We want this data to be fed through the NLU service as one message, so we need to merge all of these messages into one. We can do this with a `Join` node - drop one of these in now. Change its properties to `Mode` **manual** and then enter **3** in the `After a timeout following the first message` field. The messages will arrive at this node in quick succession, so setting the timeout field ensures we keep collecting and joining the messages until a 3 second delay suggests they have stopped arriving.
 
 ![](./images/nlu-5.jpg)
 

@@ -1,5 +1,5 @@
 # Watson Cognitive Labs
-These Watson Cognitive Labs provide an introduction to using IBM Watson APIs, by guiding the participant through the creation of several prototype applications utilising IBM Watson cognitive services.
+These Watson Cognitive Labs provide an introduction to using IBM Watson APIs, by guiding the participant through the creation of several prototype applications that utilise IBM Watson cognitive services.
 
 During the course of the two labs, the lab attendee will create:
 
