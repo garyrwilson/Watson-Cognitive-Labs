@@ -162,7 +162,7 @@ A **dialog** uses the _intents_ and _entities_ that are identified in the user's
 
   ![](./images/assistant-dialog-welcome2.jpg)
 
-  These tests ensure that we will always provide a welcome response when the dialog first starts, or when someone 'greets' the chatbot. The `input.text == init` test is useful during testing as we can use it to force a restart of the dialog.
+  These tests ensure that we will always provide a welcome response when the dialog first starts, or when someone 'greets' the chatbot. The `input.text == 'init'` test is used to initialise the HTML version of our bot later.
 
   - You can leave the `Anything Else` node with its default settings.
 

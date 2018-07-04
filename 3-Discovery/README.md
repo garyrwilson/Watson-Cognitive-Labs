@@ -110,17 +110,19 @@ In this section we are going to setup the Discovery service, create a custom col
 
 ![](./images/discovery-2a.jpg)
 
-- Drag and drop or browse and select the JSON documents from the previously extracted dataset. There are 999 in total, and as there are limits to how documents you can add in a single transaction when you are using a Lite plan, **we suggest you upload in batches of 100-200 documents at a time**.
+- Drag and drop or browse and select the JSON documents from the previously extracted dataset. There are 999 in total, and as there are limits to how documents you can add in a single transaction, **we suggest you upload in batches of 200 documents at a time if you are using a `Standard` plan, or 100 if you are using a `Lite` plan**.
 
 - Watson Discovery will start to upload and process the files as you add them ... it will take a few minutes! You will see the `Document` count increase and the `General Sentiment` values change as Watson Discovery processes each of the files.
 
   ![](./images/discovery-add-collection.jpg)
 
+- If the `Document count` stops increasing, try refreshing the screen a couple of times. If it's still static, hit `Upload documents` again and select files that have not yet been processed. For example, if the count stopped at 125, select `126.json` onwards (taking into account the batch sizes previously suggested).
+
 - Whilst on this screen select `Use this collection in API` and make a note of `Environment ID` and `Collection ID` as we'll need them in our Node-RED flow.
 
-  ![ids](./images/discovery-ids.jpg)
+  ![](./images/discovery-ids.jpg)
 
-**(12)** When you've added all of the documents, you can query the collection even whilst uploading and processing is still ongoing, by clicking on the `Build Query` icon ![](./images/discovery-query-icon.jpg) on the left side of the screen.
+**(12)** When you've added all of the documents, you can query the collection whilst uploading and processing is still ongoing, by clicking on the `Build Query` icon ![](./images/discovery-query-icon.jpg) on the left side of the screen.
 
 **(13)** If you select the `Run query` icon at the bottom of the screen you will see a selection of the documents in the collection that have been uploaded so far. Select the curly brackets next to one of the `enriched_Accepted_Answer` fields to see the sentiment score Watson Discovery has applied to the document.
 

@@ -172,7 +172,7 @@ When the zip files have been uploaded, drag the `vr-crack-images.zip` file to th
 
 ![](./images/vr-custom-8.jpg)
 
-From the `Overview` tab, copy the Model ID and save it for later use in your Node-RED flow.
+From the `Overview` tab, **copy the Model ID and save it for later use in your Node-RED flow**.
 
 ![](./images/vr-custom-9.jpg)
 
@@ -228,7 +228,7 @@ In this case, we are creating a simple widget to display the image downloaded fr
 
 ![](./images/vr-custom-16.jpg)
 
-The `VR Inputs` function node contains the code shown below, which provides the setup for the visual recognition node. Here you just need to change the `classifier_id` supplied from `CrackDetection_237362588` to the classifier ID you noted down when you created your custom classifier in **Watson Studio**.
+The `VR Inputs` function node contains the code shown below, which provides the setup for the visual recognition node. Here you just need to change the `classifier_id` supplied from `CrackDetection_237362588` to the `MODEL ID` you noted down when you created your custom classifier in **Watson Studio**.
 ```javascript
 global.set("imgData",msg.payload);
 global.set("fileName",msg.filename);
@@ -239,6 +239,15 @@ msg.params = {classifier_ids:["CrackDetection_237362588"],
 };
 return msg;
 ```
+
+If you forgot to note the classifer ID down, you can get it by selecting your `Drone Inspection` project from the `Projects` pull-down in **Watson Studio**, and selecting `Assets`.
+
+![](./images/vr-custom-16a.jpg)
+
+You'll find the classifier ID under `MODEL ID` at the bottom of the `Assets` screen.
+
+![](./images/vr-custom-16b.jpg)
+
 **(11)** The `Classify Image` and `Retrieve VR Score for Gauge` nodes need no changes. The former calls the Watson Visual Recognition service, compares our selected image with our classifier, and provides results to the latter, which retrieves the score from the `msg.result` JSON message and rounds it.
 
 **(12)** Finally, the `gauge` node takes the score as input and adds a gauge widget to the dashboard. Double-click the node if you want to look at its customisation options.
