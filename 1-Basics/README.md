@@ -283,7 +283,7 @@ If you are new to Node-RED then take a look at [this tutorial](https://nodered.o
 
   - `Create` a new Node-RED application with a unique name
 
-**(2)** After creating the application (and even if you've previously created it) go to `Overview` from the left menu bar and increase the `GB MEMORY PER INSTANCE` from the default of 256Mb to at least 512 Mb. You can increase the value but can't `Save` it until your application is up and `Running`.
+**(2)** After creating the application (and even if you've previously created it) go to `Overview` from the left menu bar and increase the `GB MEMORY PER INSTANCE` from the default of 256Mb to 1Gb. You can increase the value but can't `Save` it until your application is up and `Running`.
 
 ![](./images/ibmcloud-1a.jpg)
 
