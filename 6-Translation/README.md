@@ -14,7 +14,9 @@ The same instance of Node-RED can be used.
 - setup a Twitter application so you can use the Twitter API within Node-RED
 - use the Twitter node in Node-RED to intercept your personal tweets
 - select any personal tweets for translation that have a hashtag `#xYY`
-- use Watson Language Translator to translate the content of the original tweet
+  - x = 'translate', YY = [two-character IETF code](https://console.bluemix.net/docs/services/language-translator/translation-models.html#translation-models) for destination language
+- use Watson Language Translator to derive the source language of your tweet
+- translate the content of the original tweet into your preferred destination language
 - send a new tweet with the translated content
 
 ## Setup Watson Language Translator service and a Twitter application
@@ -67,9 +69,9 @@ Go to `Keys and Access Tokens` and make a note of your `Consumer Key` and `Consu
 ## Build the Node-RED Twitter translation application
 **(1)** Edit the `Twitter in` node, and add the following into the `for` field:
 
-`#xAR,#xDE,#xES,#xIT,#xFR,#xPT,#xRU,#xZH`
+`#xAR,#xCA,#xCS,#xDA,#xDE,#xEN,#xES,#xFI,#xHI,#xIT,#xFR,#xJA,#xKO,#xNL,#xPL,#xPT,#xRU,#xSV,#xTR,#xZH`
 
-This will ensure that the Twitter node will _only_ pass tweets with any of these listed hashtags to the rest of the flow. What we are doing here is looking for hashtags of the type `#xYY`, where `x` represents a requirement for translation, and `YY` is a two-character IETF language code (e.g. AR = Arabic, DE = German ... ZH = Chinese). We're not catering for all of the languages Watson Language Translator supports here - but there's no reason you couldn't add the additional ones in later if you want to extend the app.
+This will ensure that the Twitter node will _only_ pass tweets with any of these listed hashtags to the rest of the flow. What we are doing here is looking for hashtags of the type `#xYY`, where `x` represents a requirement for translation, and `YY` is a two-character IETF language code (e.g. AR = Arabic, DE = German ... ZH = Chinese). The codes above represent the languages that Watson Language Translator can currently perform translation services on. See [here](https://console.bluemix.net/docs/services/language-translator/translation-models.html#translation-models) for full details.
 
 ![](./images/translator-12.jpg)
 
@@ -91,14 +93,21 @@ You should then see a debug message in Node-RED! Conversely, if you enter a twee
 
 ![](./images/translator-16.jpg)
 
-**(4)** Drop in a `Function` node, a `Language Translator` node, and a `Twitter out` node.
+**(4)** Drop in a `Language Identify` node and a `Function` node.
 
-Call the `Function` node `Find Language & Strip Hashtags`, and use the code below. Here, we are checking the passed message for each potential hashtag, and setting `msg.destlang` to the appropriate two-character language code - this is where Watson Language Translator is expecting the _destination language_ to be specified.
+The `Language Identify` node takes the content of the tweet, and passes it to Watson Language Translator which derives the source language of the text - passed on via `msg.lang.language`. The service can identify [these](https://console.bluemix.net/docs/services/language-translator/identifiable-languages.html#identifiable-languages) languages. There's no requirement to change this node.
+
+Call the `Function` node `Find Destination Language & Strip Hashtags`, and use the code below.
+
+First, we are setting `msg.srclang` to the _source language_ identified by the `Language Identify` node, and then we are checking the passed message for each potential hashtag, and setting `msg.destlang` to the appropriate two-character language code - this is where Watson Language Translator is expecting the _destination language_ to be specified.
 
 We're also using the `str.replace` Javascript function here to strip out the hashtag from the original message, so that it's not included in the new translated message.
 
 ```javascript
 var str = msg.payload;
+
+// Set msg.srclang (for Translation node) to language found by Identify node
+msg.srclang = msg.lang.language;
 
 switch (true)
 {
@@ -106,17 +115,61 @@ switch (true)
        msg.destlang = "ar";
        str = str.replace(" #xAR", "");
        break;
+   case str.includes("xCA"):
+       msg.destlang = "ca";
+       str = str.replace(" #xCA", "");
+       break;
+   case str.includes("xCS"):
+       msg.destlang = "cs";
+       str = str.replace(" #xCS", "");
+       break;
+   case str.includes("xDA"):
+       msg.destlang = "da";
+       str = str.replace(" #xDA", "");
+       break;
    case str.includes("xDE"):
        msg.destlang = "de";
        str = str.replace(" #xDE", "");
+       break;
+   case str.includes("xEN"):
+       msg.destlang = "en";
+       str = str.replace(" #xEN", "");
+       break;
+   case str.includes("xES"):
+       msg.destlang = "es";
+       str = str.replace(" #xES", "");
+       break;
+   case str.includes("xFI"):
+       msg.destlang = "fi";
+       str = str.replace(" #xFI", "");
        break;
    case str.includes("xFR"):
        msg.destlang = "fr";
        str = str.replace(" #xFR", "");
        break;
+   case str.includes("xHI"):
+       msg.destlang = "hi";
+       str = str.replace(" #xHI", "");
+       break;
    case str.includes("xIT"):
        msg.destlang = "it";
        str = str.replace(" #xIT", "");
+       break;
+   case str.includes("xJA"):
+       msg.destlang = "ja";
+       str = str.replace(" #xJA", "");
+       break;
+   case str.includes("xKO"):
+       msg.destlang = "ko";
+       str = str.replace(" #xKO", "");
+       break;
+   case str.includes("xNL"):
+       msg.destlang = "nl";
+       str = str.replace(" #xNL", "");
+       break;
+   case str.includes("xPL"):
+       msg.destlang = "pl";
+       str = str.replace(" #xPL", "");
        break;
    case str.includes("xPT"):
        msg.destlang = "pt";
@@ -126,28 +179,50 @@ switch (true)
        msg.destlang = "ru";
        str = str.replace(" #xRU", "");
        break;
+   case str.includes("xSV"):
+       msg.destlang = "sv";
+       str = str.replace(" #xSV", "");
+       break;
+   case str.includes("xTR"):
+       msg.destlang = "tr";
+       str = str.replace(" #xTR", "");
+       break;
    case str.includes("xZH"):
        msg.destlang = "zh";
        str = str.replace(" #xZH", "");
-       break;
-   default:
-       msg.destlang = "es";
-       str = str.replace(" #xES", "");
 }
 
 msg.payload = str;
 return msg;
 ```
 
-**(5)** The `Language Translator` node can be left to its default settings, but check the `Twitter out` node so that the `Twitter ID` field reflects your credentials. Connect up the node as below and `Deploy`.
+**(5)** Add a `Language Translator` node, another `Function` node and a `Twitter out` node.
+
+The `Language Translator` node can be left to its default settings, but check the `Twitter out` node so that the `Twitter ID` field reflects your credentials.
+
+**(6)** Call the `Function` node `Send DM If No Translation Model` and paste in this code:
+```javascript
+// If Watson Language Translator model does not exist, DM Twitter user informing them
+
+if (typeof msg.watsonerror !== 'undefined') {
+    msg.payload = "D " + msg.tweet.user.screen_name + " Sorry, Translation Model: " + msg.srclang + "-" + msg.destlang + " is not available via Watson at this time. Check out https://bit.ly/2L325rs to see supported models."
+}
+return msg;
+```
+
+This node checks to see if the `Language Translator` node throws an error - this will happen if we try to call a translation model that Watson doesn't currently support - and sends an informational Twitter Direct Message to the user if appropriate.
+
+Connect up the nodes as below and `Deploy`.
 
 ![](./images/translator-17.jpg)
 
-**(6)** Try out your app! If you submit a tweet with any of the hashtags we are looking for, the flow will translate your tweet into the appropriate language and resubmit it.
+**(7)** Try out your app! If you submit a tweet with any of the hashtags we are looking for, Watson Language Translator will attempt to translate your tweet into the appropriate language and resubmit it. If a translation model doesn't exist, you'll get an informational DM.
 
 ![](./images/translator-18.jpg)
 
 ![](./images/translator-19.jpg)
+
+![](./images/translator-20.jpg)
 
 The complete flow can be downloaded from [here](./Node-RED/translator.json).
 

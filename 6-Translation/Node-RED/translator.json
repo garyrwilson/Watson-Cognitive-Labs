@@ -1,26 +1,26 @@
 [
     {
-        "id": "d3f4c5ba.300ec8",
+        "id": "8f6dca99.76f108",
         "type": "twitter in",
-        "z": "46274cd9.feb464",
+        "z": "7b52dd4e.291cd4",
         "twitter": "",
-        "tags": "#xAR,#xDE,#xES,#xIT,#xFR,#xPT,#xRU,#xZH",
+        "tags": "#xAR,#xCA,#xCS,#xDA,#xDE,#xEN,#xES,#xFI,#xHI,#xIT,#xFR,#xJA,#xKO,#xNL,#xPL,#xPT,#xRU,#xSV,#xTR,#xZH",
         "user": "false",
         "name": "",
         "topic": "tweets",
         "inputs": 0,
-        "x": 170.73660714285714,
-        "y": 249.4475446428571,
+        "x": 251.69921875,
+        "y": 753.33984375,
         "wires": [
             [
-                "b030f7da.0512c8"
+                "4fecfb61.f69e04"
             ]
         ]
     },
     {
-        "id": "b030f7da.0512c8",
+        "id": "4fecfb61.f69e04",
         "type": "switch",
-        "z": "46274cd9.feb464",
+        "z": "7b52dd4e.291cd4",
         "name": "Only Select My Tweets",
         "property": "tweet.user.screen_name",
         "propertyType": "msg",
@@ -37,49 +37,74 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 389.31359100341797,
-        "y": 307.63953590393066,
+        "x": 421.69921875,
+        "y": 893.33984375,
         "wires": [
             [
-                "d897a75a.849058"
+                "54b07093.d9b62"
             ],
             []
         ]
     },
     {
-        "id": "4eadd25a.85fe3c",
+        "id": "31d2ecdf.bebb54",
         "type": "debug",
-        "z": "46274cd9.feb464",
+        "z": "7b52dd4e.291cd4",
         "name": "",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "true",
-        "x": 1162.1706886291504,
-        "y": 258.1138496398926,
+        "x": 1431.69921875,
+        "y": 813.33984375,
         "wires": []
     },
     {
-        "id": "d897a75a.849058",
-        "type": "function",
-        "z": "46274cd9.feb464",
-        "name": "Find Language & Strip Hashtags",
-        "func": "var str = msg.payload;\n\nswitch (true)\n{\n   case str.includes(\"xAR\"):\n       msg.destlang = \"ar\";\n       str = str.replace(\" #xAR\", \"\");\n       break; \n   case str.includes(\"xDE\"):\n       msg.destlang = \"de\";\n       str = str.replace(\" #xDE\", \"\");\n       break; \n   case str.includes(\"xFR\"):\n       msg.destlang = \"fr\";\n       str = str.replace(\" #xFR\", \"\");\n       break;\n   case str.includes(\"xIT\"):\n       msg.destlang = \"it\";\n       str = str.replace(\" #xIT\", \"\");\n       break;\n   case str.includes(\"xPT\"):\n       msg.destlang = \"pt\";\n       str = str.replace(\" #xPT\", \"\");\n       break;\n   case str.includes(\"xRU\"):\n       msg.destlang = \"ru\";\n       str = str.replace(\" #xRU\", \"\");\n       break;\n   case str.includes(\"xZH\"):\n       msg.destlang = \"zh\";\n       str = str.replace(\" #xZH\", \"\");\n       break;\n   default: \n       msg.destlang = \"es\";\n       str = str.replace(\" #xES\", \"\");\n}\n\nmsg.payload = str;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 672.8851013183594,
-        "y": 251.43416595458984,
+        "id": "451e0241.b336bc",
+        "type": "twitter out",
+        "z": "7b52dd4e.291cd4",
+        "twitter": "",
+        "name": "Tweet",
+        "x": 1431.69921875,
+        "y": 933.33984375,
+        "wires": []
+    },
+    {
+        "id": "54b07093.d9b62",
+        "type": "watson-language-translator-identify",
+        "z": "7b52dd4e.291cd4",
+        "name": "",
+        "default-endpoint": true,
+        "service-endpoint": "https://gateway.watsonplatform.net/language-translator/api",
+        "x": 571.69921875,
+        "y": 813.33984375,
         "wires": [
             [
-                "f6bb6777.e75488"
+                "80fb18e1.88f318"
             ]
         ]
     },
     {
-        "id": "f6bb6777.e75488",
+        "id": "80fb18e1.88f318",
+        "type": "function",
+        "z": "7b52dd4e.291cd4",
+        "name": "Find Destination Language & Strip Hashtags",
+        "func": "var str = msg.payload;\n\n// Set msg.srclang (for Translation node) to language found by Identify node\nmsg.srclang = msg.lang.language;\n\nswitch (true)\n{\n   case str.includes(\"xAR\"):\n       msg.destlang = \"ar\";\n       str = str.replace(\" #xAR\", \"\");\n       break; \n   case str.includes(\"xCA\"):\n       msg.destlang = \"ca\";\n       str = str.replace(\" #xCA\", \"\");\n       break; \n   case str.includes(\"xCS\"):\n       msg.destlang = \"cs\";\n       str = str.replace(\" #xCS\", \"\");\n       break; \n   case str.includes(\"xDA\"):\n       msg.destlang = \"da\";\n       str = str.replace(\" #xDA\", \"\");\n       break;\n   case str.includes(\"xDE\"):\n       msg.destlang = \"de\";\n       str = str.replace(\" #xDE\", \"\");\n       break; \n   case str.includes(\"xEN\"):\n       msg.destlang = \"en\";\n       str = str.replace(\" #xEN\", \"\");\n       break; \n   case str.includes(\"xES\"):\n       msg.destlang = \"es\";\n       str = str.replace(\" #xES\", \"\");\n       break; \n   case str.includes(\"xFI\"):\n       msg.destlang = \"fi\";\n       str = str.replace(\" #xFI\", \"\");\n       break; \n   case str.includes(\"xFR\"):\n       msg.destlang = \"fr\";\n       str = str.replace(\" #xFR\", \"\");\n       break;\n   case str.includes(\"xHI\"):\n       msg.destlang = \"hi\";\n       str = str.replace(\" #xHI\", \"\");\n       break;\n   case str.includes(\"xIT\"):\n       msg.destlang = \"it\";\n       str = str.replace(\" #xIT\", \"\");\n       break;\n   case str.includes(\"xJA\"):\n       msg.destlang = \"ja\";\n       str = str.replace(\" #xJA\", \"\");\n       break;\n   case str.includes(\"xKO\"):\n       msg.destlang = \"ko\";\n       str = str.replace(\" #xKO\", \"\");\n       break;\n   case str.includes(\"xNL\"):\n       msg.destlang = \"nl\";\n       str = str.replace(\" #xNL\", \"\");\n       break;\n   case str.includes(\"xPL\"):\n       msg.destlang = \"pl\";\n       str = str.replace(\" #xPL\", \"\");\n       break;\n   case str.includes(\"xPT\"):\n       msg.destlang = \"pt\";\n       str = str.replace(\" #xPT\", \"\");\n       break;\n   case str.includes(\"xRU\"):\n       msg.destlang = \"ru\";\n       str = str.replace(\" #xRU\", \"\");\n       break;\n   case str.includes(\"xSV\"):\n       msg.destlang = \"sv\";\n       str = str.replace(\" #xSV\", \"\");\n       break;\n   case str.includes(\"xTR\"):\n       msg.destlang = \"tr\";\n       str = str.replace(\" #xTR\", \"\");\n       break;\n   case str.includes(\"xZH\"):\n       msg.destlang = \"zh\";\n       str = str.replace(\" #xZH\", \"\");\n}\n\nmsg.payload = str;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 771.69921875,
+        "y": 893.33984375,
+        "wires": [
+            [
+                "d9c12ea4.1c018"
+            ]
+        ]
+    },
+    {
+        "id": "d9c12ea4.1c018",
         "type": "watson-translator",
-        "z": "46274cd9.feb464",
+        "z": "7b52dd4e.291cd4",
         "name": "",
         "action": "translate",
         "basemodel": "en-tr",
@@ -87,7 +112,6 @@
         "srclang": "en",
         "destlang": "tr",
         "password": "",
-        "apikey": "",
         "custom": "",
         "domainhidden": "general",
         "srclanghidden": "en",
@@ -97,26 +121,32 @@
         "filetype": "forcedglossary",
         "trainid": "",
         "lgparams2": true,
-        "neural": false,
+        "neural": true,
         "default-endpoint": true,
         "service-endpoint": "https://gateway.watsonplatform.net/language-translator/api",
-        "x": 950.7366638183594,
-        "y": 309.3136205673218,
+        "x": 991.69921875,
+        "y": 813.33984375,
         "wires": [
             [
-                "4eadd25a.85fe3c",
-                "a5667213.77b47"
+                "1de9279b.547138"
             ]
         ]
     },
     {
-        "id": "a5667213.77b47",
-        "type": "twitter out",
-        "z": "46274cd9.feb464",
-        "twitter": "",
-        "name": "Tweet",
-        "x": 1165.016746520996,
-        "y": 375.3292541503906,
-        "wires": []
+        "id": "1de9279b.547138",
+        "type": "function",
+        "z": "7b52dd4e.291cd4",
+        "name": "Send DM If No Translation Model",
+        "func": "// If Watson Language Translator model does not exist, DM Twitter user informing them\n\nif (typeof msg.watsonerror !== 'undefined') {\n    msg.payload = \"D \" + msg.tweet.user.screen_name + \" Sorry, Translation Model: \" + msg.srclang + \"-\" + msg.destlang + \" is not available via Watson at this time. Check out https://bit.ly/2L325rs to see supported models.\"\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1181.69921875,
+        "y": 893.33984375,
+        "wires": [
+            [
+                "31d2ecdf.bebb54",
+                "451e0241.b336bc"
+            ]
+        ]
     }
 ]
