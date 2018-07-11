@@ -24,15 +24,15 @@ The same instance of Node-RED can be used.
 
 ![](./images/translator-1.jpg)
 
-**(2)** Connect this service to your Node-RED instance. As well as connecting a service _from_ your Node-RED application, IBM Cloud allows you to connect services _to_ applications.
+**(2)** Connect this service to your Node-RED instance.
 
-Select `Connections` and `Create connection`, then select your Node-RED application and `Connect`.
+Select `Connections` and `Create connection`, then select your `Language Translator` service and `Connect`.
 
 ![](./images/translator-2.jpg)
 
 ![](./images/translator-3.jpg)
 
-Just use the defaults when asked here and select `Connect & restage app`, then hit `Restage` on the next window.
+Just use the defaults when asked here and select `Connect`, then hit `Restage` on the next window.
 
 ![](./images/translator-4.jpg)
 
